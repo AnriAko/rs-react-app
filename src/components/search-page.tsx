@@ -58,6 +58,14 @@ class SearchPage extends Component<object, SearchPageState> {
             </div>
           )}
         </div>
+        <button
+          className="mt-6 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          onClick={() => {
+            throw new Error('Test error');
+          }}
+        >
+          Throw Error
+        </button>
       </div>
     );
   }
