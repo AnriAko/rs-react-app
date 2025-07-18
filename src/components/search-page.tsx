@@ -7,6 +7,7 @@ interface SearchPageState {
   searchResult: Pokemon[];
   isLoading: boolean;
   errorMessage: string;
+  triggerError: boolean; // флаг для рендера ошибки
 }
 
 class SearchPage extends Component<object, SearchPageState> {
@@ -14,6 +15,7 @@ class SearchPage extends Component<object, SearchPageState> {
     searchResult: [],
     isLoading: false,
     errorMessage: '',
+    triggerError: false,
   };
 
   setSearchResult = (result: Pokemon[]) => {
@@ -29,7 +31,12 @@ class SearchPage extends Component<object, SearchPageState> {
   };
 
   render(): ReactNode {
-    const { searchResult, isLoading, errorMessage } = this.state;
+    const { searchResult, isLoading, errorMessage, triggerError } = this.state;
+
+    // Если пользователь нажал на кнопку — бросаем ошибку прямо в render
+    if (triggerError) {
+      throw new Error('Test error from render');
+    }
 
     return (
       <div className="min-h-screen bg-gray-900 text-white px-6 py-8">
@@ -54,17 +61,16 @@ class SearchPage extends Component<object, SearchPageState> {
 
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-900/70 z-10 rounded-md">
-              <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent  mt-20 rounded-full animate-spin"></div>
+              <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent mt-20 rounded-full animate-spin"></div>
             </div>
           )}
         </div>
+
         <button
           className="mt-6 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          onClick={() => {
-            throw new Error('Test error');
-          }}
+          onClick={() => this.setState({ triggerError: true })}
         >
-          Throw Error
+          Throw Render Error
         </button>
       </div>
     );
