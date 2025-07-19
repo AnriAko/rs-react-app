@@ -12,6 +12,7 @@ class SearchButton extends Component<SearchButtonProps> {
 
     return (
       <button
+        data-testid="search-pokemons-button"
         onClick={handleClick}
         disabled={disabled}
         className={`px-4 py-2 rounded-md text-white font-medium transition
