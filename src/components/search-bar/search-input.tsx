@@ -17,6 +17,7 @@ class SearchInput extends Component<SearchInputProps> {
         </label>
         <input
           id="search"
+          data-testid="search-pokemons-input"
           type="text"
           value={this.props.value}
           onChange={this.props.onChange}

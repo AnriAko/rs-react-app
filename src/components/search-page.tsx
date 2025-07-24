@@ -7,7 +7,7 @@ interface SearchPageState {
   searchResult: Pokemon[];
   isLoading: boolean;
   errorMessage: string;
-  triggerError: boolean; // флаг для рендера ошибки
+  triggerError: boolean;
 }
 
 class SearchPage extends Component<object, SearchPageState> {
@@ -33,7 +33,6 @@ class SearchPage extends Component<object, SearchPageState> {
   render(): ReactNode {
     const { searchResult, isLoading, errorMessage, triggerError } = this.state;
 
-    // Если пользователь нажал на кнопку — бросаем ошибку прямо в render
     if (triggerError) {
       throw new Error('Test error from render');
     }
@@ -60,7 +59,10 @@ class SearchPage extends Component<object, SearchPageState> {
           </div>
 
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-900/70 z-10 rounded-md">
+            <div
+              className="absolute inset-0 flex items-center justify-center bg-gray-900/70 z-10 rounded-md"
+              role="status"
+            >
               <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent mt-20 rounded-full animate-spin"></div>
             </div>
           )}
