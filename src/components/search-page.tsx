@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Outlet, useMatch } from 'react-router-dom';
+import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import SearchBar from './search-bar/search-bar';
 import PokemonList from './pokemon-list/pokemon-list';
 import type { Pokemon } from './types/pokemon.dto';
@@ -15,6 +15,8 @@ const SearchPage = () => {
 
   const detailsMatch = useMatch('/details/:id');
   const hasDetails = Boolean(detailsMatch);
+
+  const navigate = useNavigate();
 
   const handleSetSearchResult = useCallback((pokemons: Pokemon[]) => {
     setSearchResult(pokemons);
@@ -99,6 +101,15 @@ const SearchPage = () => {
           <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent mt-20 rounded-full animate-spin"></div>
         </div>
       )}
+
+      <div className="mt-10 flex justify-center">
+        <button
+          onClick={() => navigate('/about')}
+          className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md"
+        >
+          Go to About Page
+        </button>
+      </div>
     </div>
   );
 };

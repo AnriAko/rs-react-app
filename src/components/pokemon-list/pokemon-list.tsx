@@ -21,7 +21,7 @@ const PokemonList = ({ result }: PokemonListProps) => {
   };
 
   return (
-    <div className="flex gap-6 mt-6" style={{ minHeight: '45vh' }}>
+    <div className="flex gap-6 mt-6 mb-3" style={{ minHeight: '45vh' }}>
       <div
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto"
         style={{ flex: 1, maxHeight: '45vh' }}
