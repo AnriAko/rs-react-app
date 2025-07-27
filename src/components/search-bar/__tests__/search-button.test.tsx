@@ -1,44 +1,46 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import SearchButton from '../search-button';
 import { vi } from 'vitest';
+import { TEST_IDS } from '../../shared/constants/test-ids';
 
 describe('SearchButton', () => {
   let handleClickMock: ReturnType<typeof vi.fn>;
+  const getButton = () => screen.getByTestId(TEST_IDS.bar.btnSearch);
 
   beforeEach(() => {
     handleClickMock = vi.fn();
   });
 
-  test('renders with default text "Search"', () => {
+  test('renders default text', () => {
     render(<SearchButton handleClick={handleClickMock} />);
-    const button = screen.getByTestId('search-pokemons-button');
+    const button = getButton();
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Search');
   });
 
-  test('renders with loading text "Loading..." when loading prop is true', () => {
+  test('shows loading text', () => {
     render(<SearchButton handleClick={handleClickMock} loading />);
-    const button = screen.getByTestId('search-pokemons-button');
+    const button = getButton();
     expect(button).toHaveTextContent('Loading...');
   });
 
-  test('button is disabled and styled accordingly when disabled prop is true', () => {
+  test('is disabled and styled', () => {
     render(<SearchButton handleClick={handleClickMock} disabled />);
-    const button = screen.getByTestId('search-pokemons-button');
+    const button = getButton();
     expect(button).toBeDisabled();
     expect(button).toHaveClass('bg-gray-400');
   });
 
-  test('calls handleClick once when clicked and not disabled', () => {
+  test('calls handleClick when enabled', () => {
     render(<SearchButton handleClick={handleClickMock} />);
-    const button = screen.getByTestId('search-pokemons-button');
+    const button = getButton();
     fireEvent.click(button);
     expect(handleClickMock).toHaveBeenCalledTimes(1);
   });
 
   test('does not call handleClick when disabled', () => {
     render(<SearchButton handleClick={handleClickMock} disabled />);
-    const button = screen.getByTestId('search-pokemons-button');
+    const button = getButton();
     fireEvent.click(button);
     expect(handleClickMock).not.toHaveBeenCalled();
   });

@@ -1,4 +1,5 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
+import { TEST_IDS } from '../shared/constants/test-ids';
 
 interface SearchInputProps {
   limit: number;
@@ -56,6 +57,7 @@ const SearchInput = ({
           </label>
           <input
             id="limit"
+            data-testid={TEST_IDS.search.inputLimit}
             type="text"
             value={limitText}
             onChange={handleLimitChange}
@@ -66,6 +68,7 @@ const SearchInput = ({
         <button
           onClick={() => prevUrl && fetchFromFullUrl(prevUrl)}
           disabled={!prevUrl || isLoading}
+          data-testid={TEST_IDS.search.btnPrev}
           className="px-4 ml-5 mt-6 py-2 bg-gray-700 text-white rounded disabled:opacity-50 whitespace-nowrap h-[38px] flex items-center"
           type="button"
         >
@@ -78,6 +81,7 @@ const SearchInput = ({
           </label>
           <input
             id="page"
+            data-testid={TEST_IDS.search.inputPage}
             type="text"
             value={pageText}
             onChange={handlePageChange}
@@ -88,6 +92,7 @@ const SearchInput = ({
         <button
           onClick={() => nextUrl && fetchFromFullUrl(nextUrl)}
           disabled={!nextUrl || isLoading}
+          data-testid={TEST_IDS.search.btnNext}
           className="px-4 mt-6 py-2 bg-gray-700 text-white rounded disabled:opacity-50 whitespace-nowrap h-[38px] flex items-center"
           type="button"
         >

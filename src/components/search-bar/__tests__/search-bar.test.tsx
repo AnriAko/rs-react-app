@@ -5,14 +5,23 @@ import {
   waitFor,
   act,
 } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import SearchBar from '../search-bar';
-import getPokemons from '../../service/pokemon-service';
+import { getPokemons } from '../../service/pokemon-service';
+import { vi } from 'vitest';
+
+vi.mock('../../shared/hooks/use-local-storage', () => ({
+  useLocalStorage: () => ({
+    getValue: vi.fn(() => ''),
+    setValue: vi.fn(),
+  }),
+}));
 
 vi.mock('../../service/pokemon-service');
 
 const dummyPokemonsResponse = {
   count: 2,
-  next: '',
+  next: '?limit=20&offset=20',
   previous: null,
   results: [
     { name: 'bulbasaur', url: 'url1' },
@@ -24,45 +33,37 @@ describe('SearchBar component', () => {
   const setSearchResultMock = vi.fn();
   const onLoadingChangeMock = vi.fn();
   const onErrorMock = vi.fn();
-
-  const mockedGetPokemons = getPokemons as unknown as vi.Mock;
+  const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
     mockedGetPokemons.mockResolvedValue(dummyPokemonsResponse);
   });
 
+  const renderWithRouter = () =>
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <SearchBar
+          setSearchResult={setSearchResultMock}
+          onLoadingChange={onLoadingChangeMock}
+          onError={onErrorMock}
+        />
+      </MemoryRouter>
+    );
+
   it('renders input and button', async () => {
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      renderWithRouter();
     });
 
-    const input = screen.getByRole('textbox');
-    const button = screen.getByRole('button');
-    expect(input).toBeInTheDocument();
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent(/search/i);
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveTextContent(/search/i);
   });
 
-  it('calls getPokemons and setSearchResult on search button click', async () => {
+  it('fetches and sets results on search', async () => {
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      renderWithRouter();
     });
-
-    const input = screen.getByRole('textbox');
-    fireEvent.change(input, { target: { value: '?limit=10&offset=0' } });
 
     const button = screen.getByRole('button');
     await act(async () => {
@@ -70,34 +71,30 @@ describe('SearchBar component', () => {
     });
 
     await waitFor(() => {
-      expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=10&offset=0');
-      expect(setSearchResultMock).toHaveBeenCalledWith(dummyPokemonsResponse);
+      expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=20&offset=0');
+      expect(setSearchResultMock).toHaveBeenCalledWith(
+        dummyPokemonsResponse.results
+      );
       expect(onLoadingChangeMock).toHaveBeenCalledWith(true);
       expect(onLoadingChangeMock).toHaveBeenCalledWith(false);
       expect(onErrorMock).toHaveBeenCalledWith('');
     });
   });
 
-  it('shows loading state on button while fetching', async () => {
+  it('shows loading state during fetch', async () => {
     let resolvePromise: (value: typeof dummyPokemonsResponse) => void;
     const promise = new Promise<typeof dummyPokemonsResponse>((res) => {
       resolvePromise = res;
     });
+
     mockedGetPokemons.mockReturnValue(promise);
 
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      renderWithRouter();
     });
 
     const button = screen.getByRole('button');
     fireEvent.click(button);
-
     expect(button).toHaveTextContent(/loading/i);
 
     await act(async () => {
@@ -107,17 +104,11 @@ describe('SearchBar component', () => {
     expect(button).toHaveTextContent(/search/i);
   });
 
-  it('handles errors and calls onError', async () => {
+  it('handles fetch errors', async () => {
     mockedGetPokemons.mockRejectedValue(new Error('Network Error'));
 
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      renderWithRouter();
     });
 
     const button = screen.getByRole('button');
