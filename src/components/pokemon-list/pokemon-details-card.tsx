@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getPokemonDetails } from '../service/pokemon-service';
 import type { PokemonDetails } from '../types/pokemon-details.dto';
 
-const API_BASE = 'https://pokeapi.co/api/v2/pokemon/';
-
 export default function PokemonDetailsCard() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -21,8 +19,7 @@ export default function PokemonDetailsCard() {
 
       setLoading(true);
       try {
-        const url = id.startsWith('http') ? id : `${API_BASE}${id}`;
-        const data = await getPokemonDetails(url);
+        const data = await getPokemonDetails(id);
         setPokemon(data);
       } catch (error) {
         console.error('Failed to fetch pokemon details:', error);

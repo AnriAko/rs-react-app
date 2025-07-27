@@ -1,25 +1,26 @@
 import axios from 'axios';
-import type { GetPokemons } from '../types/pokemon.dto';
 import type { PokemonDetails } from '../types/pokemon-details.dto';
+import type { GetPokemons } from '../types/pokemon.dto';
 
-export async function getPokemonDetails(url: string): Promise<PokemonDetails> {
+const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
+
+export async function getPokemonDetails(id: string): Promise<PokemonDetails> {
   try {
-    console.log(url);
+    const url = `${BASE_URL}/${id}/`;
+    console.log(`Fetching details for Pokemon ID: ${id} from URL: ${url}`);
     const response = await axios.get<PokemonDetails>(url);
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching pokemon details from ${url}:`, error);
+    console.error(`Error fetching pokemon details for id ${id}:`, error);
     throw error;
   }
 }
+
 export async function getPokemons(
   searchValue: string = '?limit=10000&offset=0'
 ): Promise<GetPokemons> {
   try {
-    const response = await axios.get<GetPokemons>(
-      `https://pokeapi.co/api/v2/pokemon${searchValue}`
-    );
+    const response = await axios.get<GetPokemons>(`${BASE_URL}${searchValue}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching pokemons:', error);
