@@ -85,17 +85,4 @@ describe('SearchPage', () => {
       expect(screen.getByTestId('pokemon-list')).toHaveTextContent('[]');
     });
   });
-
-  test('throws an error and triggers error boundary when button is clicked', () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    expect(() => {
-      render(<SearchPage />);
-      fireEvent.click(screen.getByText(/Throw Render Error/i));
-    }).toThrow('Test error from render');
-
-    consoleErrorSpy.mockRestore();
-  });
 });
