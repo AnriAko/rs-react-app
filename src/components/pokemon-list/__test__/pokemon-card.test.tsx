@@ -1,25 +1,32 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import PokemonCard from '../pokemon-card';
 
 describe('PokemonCard', () => {
+  const mockOnSelect = vi.fn();
+
   const props = {
     name: 'pikachu',
-    url: 'https://pokeapi.co/api/v2/pokemon/25/',
+    id: '25',
+    onSelect: mockOnSelect,
   };
 
-  test('renders Pokemon name capitalized', () => {
-    render(<PokemonCard {...props} />);
-    const nameElement = screen.getByText(/Pokémon:/i);
-    expect(nameElement).toBeInTheDocument();
-    expect(nameElement).toHaveTextContent('Pokémon: Pikachu');
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  test('renders link with correct url and attributes', () => {
+  test('renders capitalized name', () => {
     render(<PokemonCard {...props} />);
-    const linkElement = screen.getByRole('link', { name: props.url });
-    expect(linkElement).toBeInTheDocument();
-    expect(linkElement).toHaveAttribute('href', props.url);
-    expect(linkElement).toHaveAttribute('target', '_blank');
-    expect(linkElement).toHaveAttribute('rel', 'noopener noreferrer');
+    const nameElement = screen.getByText('Pikachu');
+    expect(nameElement).toBeInTheDocument();
+  });
+
+  test('calls onSelect with correct id when clicked', () => {
+    render(<PokemonCard {...props} />);
+    const card = screen
+      .getByRole('heading', { name: 'Pikachu' })
+      .closest('div');
+    expect(card).toBeInTheDocument();
+    if (card) fireEvent.click(card);
+    expect(mockOnSelect).toHaveBeenCalledWith('25');
   });
 });
