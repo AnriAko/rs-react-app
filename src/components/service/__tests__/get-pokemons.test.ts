@@ -1,31 +1,92 @@
 import axios from 'axios';
-import getPokemons from '../pokemon-service';
+import { getPokemons, getPokemonDetails } from '../pokemon-service';
+import type { GetPokemons } from '../../types/pokemon.dto';
+import type { PokemonDetails } from '../../types/pokemon-details.dto';
 
 vi.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe('getPokemons', () => {
-  test('returns pokemon list on success', async () => {
-    const mockData = {
+describe('pokemon-service', () => {
+  describe('getPokemons', () => {
+    const mockData: GetPokemons = {
+      count: 2,
+      next: null,
+      previous: null,
       results: [
         { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
         { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
       ],
     };
 
-    mockedAxios.get.mockResolvedValueOnce({ data: mockData });
+    test('returns pokemon list on success', async () => {
+      mockedAxios.get.mockResolvedValueOnce({ data: mockData });
 
-    const result = await getPokemons('?limit=2');
+      const result = await getPokemons('?limit=2');
 
-    expect(result).toEqual(mockData.results);
-    expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://pokeapi.co/api/v2/pokemon?limit=2'
-    );
+      expect(result).toEqual(mockData);
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        'https://pokeapi.co/api/v2/pokemon?limit=2'
+      );
+    });
+
+    test('throws error on failure', async () => {
+      mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
+
+      await expect(getPokemons('?bad=query')).rejects.toThrow('Network Error');
+    });
   });
 
-  test('throws error on failure', async () => {
-    mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
+  describe('getPokemonDetails', () => {
+    const mockDetails: PokemonDetails = {
+      id: 1,
+      name: 'bulbasaur',
+      height: 7,
+      weight: 69,
+      base_experience: 64,
+      abilities: [
+        {
+          is_hidden: false,
+          slot: 1,
+          ability: {
+            name: 'overgrow',
+            url: 'https://pokeapi.co/api/v2/ability/65/',
+          },
+        },
+      ],
+      sprites: {
+        front_default: 'https://example.com/bulbasaur.png',
+        other: {
+          'official-artwork': {
+            front_default: 'https://example.com/artwork/bulbasaur.png',
+          },
+        },
+      },
+      types: [
+        {
+          slot: 1,
+          type: {
+            name: 'grass',
+            url: 'https://pokeapi.co/api/v2/type/12/',
+          },
+        },
+      ],
+    };
 
-    await expect(getPokemons('?bad=query')).rejects.toThrow('Network Error');
+    test('returns pokemon details on success', async () => {
+      mockedAxios.get.mockResolvedValueOnce({ data: mockDetails });
+
+      const result = await getPokemonDetails('1');
+
+      expect(result).toEqual(mockDetails);
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        'https://pokeapi.co/api/v2/pokemon/1/'
+      );
+    });
+
+    test('throws error on failure', async () => {
+      mockedAxios.get.mockRejectedValueOnce(new Error('404 Not Found'));
+
+      await expect(getPokemonDetails('9999')).rejects.toThrow('404 Not Found');
+    });
   });
 });

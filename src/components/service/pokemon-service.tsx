@@ -7,7 +7,6 @@ const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 export async function getPokemonDetails(id: string): Promise<PokemonDetails> {
   try {
     const url = `${BASE_URL}/${id}/`;
-    console.log(`Fetching details for Pokemon ID: ${id} from URL: ${url}`);
     const response = await axios.get<PokemonDetails>(url);
     return response.data;
   } catch (error) {
