@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SearchInput from './search-input';
 import SearchButton from './search-button';
 import type { Pokemon } from '../types/pokemon.dto';
-import getPokemons from '../service/pokemon-service';
+import { getPokemons } from '../service/pokemon-service';
 import { useLocalStorage } from '../shared/hooks/use-local-storage';
 
 interface SearchBarProps {
@@ -12,32 +13,68 @@ interface SearchBarProps {
 }
 
 const PREVIOUS_REQUEST = 'previousRequest';
-const DEFAULT_QUERY = '?limit=10000&offset=0';
+const DEFAULT_LIMIT = 20;
+const DEFAULT_PAGE = 1;
 
 const SearchBar = ({
   setSearchResult,
   onLoadingChange,
   onError,
 }: SearchBarProps) => {
-  const [searchValue, setSearchValue] = useState('');
+  const [limit, setLimit] = useState(DEFAULT_LIMIT);
+  const [page, setPage] = useState(DEFAULT_PAGE);
   const [isLoading, setIsLoading] = useState(false);
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
+  const [prevUrl, setPrevUrl] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const { getValue, setValue } = useLocalStorage<string>(PREVIOUS_REQUEST);
 
+  const { limit: queryLimit, page: queryPage } = useMemo(() => {
+    const searchParams = new URLSearchParams(
+      location.search || getValue() || ''
+    );
+    return {
+      limit: parseInt(searchParams.get('limit') || '') || DEFAULT_LIMIT,
+      page: parseInt(searchParams.get('page') || '') || DEFAULT_PAGE,
+    };
+  }, [location.search, getValue]);
+
+  useEffect(() => {
+    if (!location.search) {
+      const savedQuery = getValue();
+      if (savedQuery) {
+        navigate(savedQuery, { replace: true });
+      }
+    }
+  }, [location.search, getValue, navigate]);
+
+  const updateUrlQueryParams = useCallback(
+    (limit: number, page: number) => {
+      const query = `?limit=${limit}&page=${page}`;
+      navigate(query, { replace: false });
+      setValue(query);
+    },
+    [navigate, setValue]
+  );
+
   const fetchPokemons = useCallback(
-    async (request: string) => {
+    async (limit: number, page: number) => {
       try {
         setIsLoading(true);
         onLoadingChange?.(true);
         onError?.('');
 
-        const response = await getPokemons(request);
+        const offset = limit * (page - 1);
+        const apiQuery = `?limit=${limit}&offset=${offset}`;
+        const response = await getPokemons(apiQuery);
         setSearchResult(response.results);
+        setNextUrl(response.next);
+        setPrevUrl(response.previous);
       } catch (error: unknown) {
-        let message = 'Unknown error occurred';
-        if (error instanceof Error) {
-          message = error.message;
-        }
+        const message =
+          error instanceof Error ? error.message : 'Unknown error occurred';
         console.error('Failed to fetch pokemons:', message);
         onError?.(message);
       } finally {
@@ -45,63 +82,77 @@ const SearchBar = ({
         onLoadingChange?.(false);
       }
     },
-    [onError, onLoadingChange, setSearchResult]
+    [onLoadingChange, onError, setSearchResult]
   );
 
-  useEffect(() => {
-    const previousRequest = getValue();
-    const request = previousRequest || DEFAULT_QUERY;
-
-    if (previousRequest) {
-      setSearchValue(previousRequest);
-    }
-
-    const fetchOnMount = async () => {
+  const fetchFromFullUrl = useCallback(
+    async (fullUrl: string) => {
       try {
         setIsLoading(true);
         onLoadingChange?.(true);
         onError?.('');
 
-        const response = await getPokemons(request);
+        const url = new URL(fullUrl);
+        const limitParam =
+          parseInt(url.searchParams.get('limit') || '') || DEFAULT_LIMIT;
+        const offset = parseInt(url.searchParams.get('offset') || '') || 0;
+        const pageParam = Math.floor(offset / limitParam) + 1;
+
+        const response = await getPokemons(url.search);
         setSearchResult(response.results);
+        setNextUrl(response.next);
+        setPrevUrl(response.previous);
+
+        setLimit(limitParam);
+        setPage(pageParam);
+        updateUrlQueryParams(limitParam, pageParam);
       } catch (error: unknown) {
-        let message = 'Unknown error occurred';
-        if (error instanceof Error) {
-          message = error.message;
-        }
-        console.error('Failed to fetch pokemons:', message);
+        const message =
+          error instanceof Error ? error.message : 'Unknown error occurred';
+        console.error('Failed to fetch pokemons from URL:', message);
         onError?.(message);
       } finally {
         setIsLoading(false);
         onLoadingChange?.(false);
       }
-    };
+    },
+    [onLoadingChange, onError, setSearchResult, updateUrlQueryParams]
+  );
 
-    void fetchOnMount();
-  }, [getValue, onError, onLoadingChange, setSearchResult]);
+  useEffect(() => {
+    setLimit(queryLimit);
+    setPage(queryPage);
+    void fetchPokemons(queryLimit, queryPage);
+  }, [queryLimit, queryPage, fetchPokemons]);
 
-  const handleSearchValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+  const setSearchRequest = (newLimit: number, newPage: number) => {
+    setLimit(newLimit);
+    setPage(newPage);
   };
 
   const handleSearchClick = async () => {
-    const request = searchValue.trim() || DEFAULT_QUERY;
-
-    await fetchPokemons(request);
-
-    if (searchValue.trim()) {
-      setValue(searchValue.trim());
-    }
+    updateUrlQueryParams(limit, page);
+    await fetchPokemons(limit, page);
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 p-4 bg-gray-800 rounded-md">
-      <SearchInput value={searchValue} onChange={handleSearchValueChange} />
-      <SearchButton
-        handleClick={handleSearchClick}
-        disabled={isLoading}
-        loading={isLoading}
-      />
+    <div className="flex flex-col gap-4 p-4 bg-gray-800 rounded-md">
+      <div className="flex flex-row items-end gap-4">
+        <SearchInput
+          limit={limit}
+          page={page}
+          setSearchRequest={setSearchRequest}
+          isLoading={isLoading}
+          prevUrl={prevUrl}
+          nextUrl={nextUrl}
+          fetchFromFullUrl={fetchFromFullUrl}
+        />
+        <SearchButton
+          handleClick={handleSearchClick}
+          disabled={isLoading}
+          loading={isLoading}
+        />
+      </div>
     </div>
   );
 };
