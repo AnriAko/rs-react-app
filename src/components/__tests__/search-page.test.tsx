@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import SearchPage from '../search-page';
+import { MemoryRouter } from 'react-router-dom';
 
 interface Pokemon {
   name: string;
@@ -53,15 +54,22 @@ vi.mock('../pokemon-list/pokemon-list', () => ({
 }));
 
 describe('SearchPage', () => {
+  const renderWithRouter = () =>
+    render(
+      <MemoryRouter>
+        <SearchPage />
+      </MemoryRouter>
+    );
+
   test('renders main heading and SearchBar and PokemonList', () => {
-    render(<SearchPage />);
+    renderWithRouter();
     expect(screen.getByText(/Pokemon search page/i)).toBeInTheDocument();
     expect(screen.getByTestId('setSearchResult-btn')).toBeInTheDocument();
     expect(screen.getByTestId('pokemon-list')).toBeInTheDocument();
   });
 
   test('updates search results when setSearchResult is called', async () => {
-    render(<SearchPage />);
+    renderWithRouter();
     fireEvent.click(screen.getByTestId('setSearchResult-btn'));
     await waitFor(() => {
       expect(screen.getByTestId('pokemon-list')).toHaveTextContent('pikachu');
@@ -70,13 +78,13 @@ describe('SearchPage', () => {
   });
 
   test('shows loading spinner when isLoading is true', () => {
-    render(<SearchPage />);
+    renderWithRouter();
     fireEvent.click(screen.getByTestId('setLoading-btn'));
     expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
   });
 
   test('shows error message and clears pokemon list when onError is called', async () => {
-    render(<SearchPage />);
+    renderWithRouter();
     fireEvent.click(screen.getByTestId('setError-btn'));
     await waitFor(() => {
       expect(

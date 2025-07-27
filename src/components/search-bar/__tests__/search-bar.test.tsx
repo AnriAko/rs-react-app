@@ -9,6 +9,7 @@ import { MemoryRouter } from 'react-router-dom';
 import SearchBar from '../search-bar';
 import { getPokemons } from '../../service/pokemon-service';
 import { vi } from 'vitest';
+import { TEST_IDS } from '../../shared/constants/test-ids';
 
 vi.mock('../../shared/hooks/use-local-storage', () => ({
   useLocalStorage: () => ({
@@ -56,8 +57,9 @@ describe('SearchBar component', () => {
       renderWithRouter();
     });
 
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toHaveTextContent(/search/i);
+    expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.search.inputPage)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.bar.btnSearch)).toBeInTheDocument();
   });
 
   it('fetches and sets results on search', async () => {
@@ -65,7 +67,7 @@ describe('SearchBar component', () => {
       renderWithRouter();
     });
 
-    const button = screen.getByRole('button');
+    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
     await act(async () => {
       fireEvent.click(button);
     });
@@ -93,7 +95,7 @@ describe('SearchBar component', () => {
       renderWithRouter();
     });
 
-    const button = screen.getByRole('button');
+    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
     fireEvent.click(button);
     expect(button).toHaveTextContent(/loading/i);
 
@@ -111,7 +113,7 @@ describe('SearchBar component', () => {
       renderWithRouter();
     });
 
-    const button = screen.getByRole('button');
+    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
     fireEvent.click(button);
 
     await waitFor(() => {

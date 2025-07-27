@@ -8,4 +8,7 @@ export const TEST_IDS = {
   bar: {
     btnSearch: 'search-button',
   },
+  pokemonDetails: {
+    loading: 'pokemon-loading',
+  },
 };

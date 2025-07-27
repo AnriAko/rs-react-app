@@ -7,7 +7,9 @@ import type { PokemonDetails } from '../../types/pokemon-details.dto';
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
 
-vi.mock('../service/pokemon-service');
+vi.mock('../../service/pokemon-service', () => ({
+  getPokemonDetails: vi.fn(),
+}));
 
 const mockPokemon: PokemonDetails = {
   id: 1,
@@ -42,7 +44,8 @@ describe('PokemonDetailsCard', () => {
   }
 
   test('renders loading state initially and then pokemon details', async () => {
-    (getPokemonDetails as Mock).mockResolvedValueOnce(mockPokemon);
+    const mockGetPokemonDetails = getPokemonDetails as Mock;
+    mockGetPokemonDetails.mockResolvedValueOnce(mockPokemon);
 
     renderWithRouter(['/details/1']);
 
@@ -59,15 +62,25 @@ describe('PokemonDetailsCard', () => {
     }) as HTMLImageElement;
     expect(img.src).toContain('official_artwork_url');
 
-    expect(screen.getByText(/base experience:/i)).toHaveTextContent('64');
-    expect(screen.getByText(/height:/i)).toHaveTextContent('7');
-    expect(screen.getByText(/weight:/i)).toHaveTextContent('69');
-    expect(screen.getByText(/types:/i)).toHaveTextContent('grass');
-    expect(screen.getByText(/abilities:/i)).toHaveTextContent('overgrow');
+    const baseExpLabel = screen.getByText(/base experience:/i);
+    expect(baseExpLabel.parentElement).toHaveTextContent(/64/);
+
+    const heightLabel = screen.getByText(/height:/i);
+    expect(heightLabel.parentElement).toHaveTextContent(/7/);
+
+    const weightLabel = screen.getByText(/weight:/i);
+    expect(weightLabel.parentElement).toHaveTextContent(/69/);
+
+    const typesLabel = screen.getByText(/types:/i);
+    expect(typesLabel.parentElement).toHaveTextContent(/grass/);
+
+    const abilitiesLabel = screen.getByText(/abilities:/i);
+    expect(abilitiesLabel.parentElement).toHaveTextContent(/overgrow/);
   });
 
-  test('shows "Pokemon not found." when API returns null', async () => {
-    (getPokemonDetails as Mock).mockRejectedValueOnce(new Error('Not found'));
+  test('shows "Pokemon not found." when API returns error', async () => {
+    const mockGetPokemonDetails = getPokemonDetails as Mock;
+    mockGetPokemonDetails.mockRejectedValueOnce(new Error('Not found'));
 
     renderWithRouter(['/details/9999']);
 
@@ -83,7 +96,8 @@ describe('PokemonDetailsCard', () => {
   });
 
   test('clicking close button navigates to home', async () => {
-    (getPokemonDetails as Mock).mockResolvedValueOnce(mockPokemon);
+    const mockGetPokemonDetails = getPokemonDetails as Mock;
+    mockGetPokemonDetails.mockResolvedValueOnce(mockPokemon);
 
     renderWithRouter(['/details/1']);
 

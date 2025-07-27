@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPokemonDetails } from '../service/pokemon-service';
 import type { PokemonDetails } from '../types/pokemon-details.dto';
+import { TEST_IDS } from '../shared/constants/test-ids';
 
 export default function PokemonDetailsCard() {
   const navigate = useNavigate();
@@ -41,7 +42,10 @@ export default function PokemonDetailsCard() {
   return (
     <div className="mt-5 w-full rounded-xl border bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-900">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold capitalize">
+        <h2
+          data-testid={TEST_IDS.pokemonDetails.loading}
+          className="text-xl font-bold capitalize"
+        >
           {pokemon?.name || 'Loading...'}
         </h2>
         <button

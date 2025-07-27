@@ -1,75 +1,93 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from '@testing-library/react';
-import SearchBar from '../search-bar';
-import * as pokemonService from '../../service/pokemon-service';
-import type { GetPokemons } from '../../types/pokemon.dto';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
+import SearchInput from '../search-input';
 import { TEST_IDS } from '../../shared/constants/test-ids';
 
-vi.mock('../../service/pokemon-service', () => ({
-  getPokemons: vi.fn(),
-}));
+describe('SearchInput', () => {
+  const fetchMock = vi.fn();
+  const setRequestMock = vi.fn();
 
-describe('SearchBar with mocked API', () => {
-  const mockData: GetPokemons = {
-    count: 2,
-    next: '',
-    previous: null,
-    results: [
-      { name: 'bulbasaur', url: 'url1' },
-      { name: 'ivysaur', url: 'url2' },
-    ],
+  const defaultProps = {
+    limit: 20,
+    page: 1,
+    setSearchRequest: setRequestMock,
+    isLoading: false,
+    prevUrl: 'prev-url',
+    nextUrl: 'next-url',
+    fetchFromFullUrl: fetchMock,
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  test('fetches and sets results on search', async () => {
-    const setSearchResultMock = vi.fn();
-    const onLoadingChangeMock = vi.fn();
-    const onErrorMock = vi.fn();
+  test('init values shown', () => {
+    render(<SearchInput {...defaultProps} />);
+    expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toHaveValue('20');
+    expect(screen.getByTestId(TEST_IDS.search.inputPage)).toHaveValue('1');
+  });
 
-    (pokemonService.getPokemons as jest.Mock).mockResolvedValue(mockData);
+  test('limit change triggers setRequest', () => {
+    render(<SearchInput {...defaultProps} />);
+    fireEvent.change(screen.getByTestId(TEST_IDS.search.inputLimit), {
+      target: { value: '5' },
+    });
+    expect(setRequestMock).toHaveBeenCalledWith(5, 1);
+  });
 
-    render(
-      <SearchBar
-        setSearchResult={setSearchResultMock}
-        onLoadingChange={onLoadingChangeMock}
-        onError={onErrorMock}
-      />
+  test('invalid limit ignored', () => {
+    render(<SearchInput {...defaultProps} />);
+    fireEvent.change(screen.getByTestId(TEST_IDS.search.inputLimit), {
+      target: { value: 'abc' },
+    });
+    expect(setRequestMock).not.toHaveBeenCalled();
+  });
+
+  test('page change triggers setRequest', () => {
+    render(<SearchInput {...defaultProps} />);
+    fireEvent.change(screen.getByTestId(TEST_IDS.search.inputPage), {
+      target: { value: '3' },
+    });
+    expect(setRequestMock).toHaveBeenCalledWith(20, 3);
+  });
+
+  test('invalid page ignored', () => {
+    render(<SearchInput {...defaultProps} />);
+    fireEvent.change(screen.getByTestId(TEST_IDS.search.inputPage), {
+      target: { value: '-1' },
+    });
+    expect(setRequestMock).not.toHaveBeenCalled();
+  });
+
+  test('prev button works', () => {
+    render(<SearchInput {...defaultProps} />);
+    fireEvent.click(screen.getByTestId(TEST_IDS.search.btnPrev));
+    expect(fetchMock).toHaveBeenCalledWith('prev-url');
+  });
+
+  test('prev button disabled', () => {
+    const { rerender } = render(
+      <SearchInput {...defaultProps} prevUrl={null} />
     );
+    expect(screen.getByTestId(TEST_IDS.search.btnPrev)).toBeDisabled();
 
-    const limitInput = screen.getByTestId(TEST_IDS.search.inputLimit);
-    const pageInput = screen.getByTestId(TEST_IDS.search.inputPage);
+    rerender(<SearchInput {...defaultProps} isLoading />);
+    expect(screen.getByTestId(TEST_IDS.search.btnPrev)).toBeDisabled();
+  });
 
-    await act(async () => {
-      fireEvent.change(limitInput, { target: { value: '2' } });
-      fireEvent.change(pageInput, { target: { value: '1' } });
-    });
+  test('next button works', () => {
+    render(<SearchInput {...defaultProps} />);
+    fireEvent.click(screen.getByTestId(TEST_IDS.search.btnNext));
+    expect(fetchMock).toHaveBeenCalledWith('next-url');
+  });
 
-    expect(limitInput).toHaveValue('2');
-    expect(pageInput).toHaveValue('1');
+  test('next button disabled', () => {
+    const { rerender } = render(
+      <SearchInput {...defaultProps} nextUrl={null} />
+    );
+    expect(screen.getByTestId(TEST_IDS.search.btnNext)).toBeDisabled();
 
-    const searchButton = screen.getByTestId(TEST_IDS.bar.btnSearch);
-
-    await act(async () => {
-      fireEvent.click(searchButton);
-    });
-
-    await waitFor(() => {
-      expect(pokemonService.getPokemons).toHaveBeenCalledWith(
-        '?limit=2&offset=0'
-      );
-      expect(setSearchResultMock).toHaveBeenCalledWith(mockData.results);
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(true);
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(false);
-      expect(onErrorMock).toHaveBeenCalledWith('');
-    });
+    rerender(<SearchInput {...defaultProps} isLoading />);
+    expect(screen.getByTestId(TEST_IDS.search.btnNext)).toBeDisabled();
   });
 });

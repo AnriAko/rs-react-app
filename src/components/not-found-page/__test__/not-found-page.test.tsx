@@ -1,8 +1,23 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import NotFoundPage from '../not-found-page';
+import { vi } from 'vitest';
+
+const mockNavigate = vi.fn();
+
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as object;
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 describe('NotFoundPage', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+  });
+
   test('renders 404 message and button', () => {
     render(
       <MemoryRouter>
@@ -16,12 +31,6 @@ describe('NotFoundPage', () => {
   });
 
   test('clicking button navigates to home', () => {
-    const mockNavigate = jest.fn();
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useNavigate: () => mockNavigate,
-    }));
-
     render(
       <MemoryRouter>
         <NotFoundPage />

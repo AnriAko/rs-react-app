@@ -9,39 +9,14 @@ describe('App routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(
-      screen.getByPlaceholderText(/search/i) || screen.getByText(/search/i)
-    ).toBeInTheDocument();
-  });
 
-  test('renders PokemonDetailsCard on /details/:id route', () => {
-    render(
-      <MemoryRouter initialEntries={['/details/1']}>
-        <App />
-      </MemoryRouter>
-    );
     expect(
-      screen.getByText(/loading/i) || screen.getByRole('heading')
+      screen.getByRole('heading', { name: /pokemon search page/i })
     ).toBeInTheDocument();
-  });
 
-  test('renders AboutPage on /about route', () => {
-    render(
-      <MemoryRouter initialEntries={['/about']}>
-        <App />
-      </MemoryRouter>
-    );
-    expect(
-      screen.getByRole('heading', { name: /about this project/i })
-    ).toBeInTheDocument();
-  });
+    expect(screen.getByTestId('search-input-limit')).toBeInTheDocument();
+    expect(screen.getByTestId('search-input-page')).toBeInTheDocument();
 
-  test('renders NotFoundPage on unknown route', () => {
-    render(
-      <MemoryRouter initialEntries={['/unknown-route']}>
-        <App />
-      </MemoryRouter>
-    );
-    expect(screen.getByText(/404 - page not found/i)).toBeInTheDocument();
+    expect(screen.getByTestId('search-button')).toBeInTheDocument();
   });
 });

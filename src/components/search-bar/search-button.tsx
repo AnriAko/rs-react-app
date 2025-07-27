@@ -1,3 +1,5 @@
+import { TEST_IDS } from '../shared/constants/test-ids';
+
 interface SearchButtonProps {
   handleClick: () => void;
   disabled?: boolean;
@@ -11,7 +13,7 @@ const SearchButton = ({
 }: SearchButtonProps) => {
   return (
     <button
-      data-testid="search-pokemons-button"
+      data-testid={TEST_IDS.bar.btnSearch}
       onClick={handleClick}
       disabled={disabled}
       className={`px-4 py-2 rounded-md text-white font-medium transition w-28
