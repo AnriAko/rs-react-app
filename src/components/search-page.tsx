@@ -8,8 +8,8 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSetSearchResult = useCallback((result: Pokemon[]) => {
-    setSearchResult(result);
+  const handleSetSearchResult = useCallback((pokemons: Pokemon[]) => {
+    setSearchResult(pokemons);
     setErrorMessage('');
   }, []);
 

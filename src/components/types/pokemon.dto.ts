@@ -1,6 +1,6 @@
 export interface GetPokemons {
   count: number;
-  next: string;
+  next: string | null;
   previous: string | null;
   results: Pokemon[];
 }
