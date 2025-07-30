@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import PokemonList from '../pokemon-list';
-import type { Pokemon } from '../../types/pokemon.dto';
+import type { Pokemon } from '../../types/pokemon';
 
 describe('PokemonList', () => {
   const pokemons: Pokemon[] = [

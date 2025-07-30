@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { getPokemonDetails } from '../service/pokemon-service';
-import type { PokemonDetails } from '../types/pokemon-details.dto';
+import type { PokemonDetails } from '../types/pokemon-details';
 import { TEST_IDS } from '../shared/constants/test-ids';
 import { ROUTES_PATH } from '../../router/routes-path';
 
 export default function PokemonDetailsCard() {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id?: string }>();
 
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export default function PokemonDetailsCard() {
     <div className="mt-5 w-full rounded-xl border bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-900">
       <div className="flex justify-between items-center mb-4">
         <h2
-          data-testid={TEST_IDS.pokemonDetails.loading}
+          data-testid={TEST_IDS.pokemonDetails.loader}
           className="text-xl font-bold capitalize"
         >
           {pokemon?.name || 'Loading...'}

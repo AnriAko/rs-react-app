@@ -1,7 +1,7 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import { TEST_IDS } from '../shared/constants/test-ids';
 
-interface SearchInputProps {
+type SearchInputProps = {
   limit: number;
   page: number;
   setSearchRequest: (limit: number, page: number) => void;
@@ -9,7 +9,7 @@ interface SearchInputProps {
   prevUrl: string | null;
   nextUrl: string | null;
   fetchFromFullUrl: (url: string) => void;
-}
+};
 
 const SearchInput = ({
   limit,

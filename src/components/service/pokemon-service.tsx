@@ -1,6 +1,6 @@
 import { api } from '../shared/api/axios';
-import type { PokemonDetails } from '../types/pokemon-details.dto';
-import type { GetPokemons } from '../types/pokemon.dto';
+import type { PokemonDetails } from '../types/pokemon-details';
+import type { GetPokemons } from '../types/pokemon';
 import { POKEMON_API_ROUTES } from '../shared/constants/api-routes';
 
 export async function getPokemonDetails(id: string): Promise<PokemonDetails> {

@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router';
 import PokemonCard from './pokemon-card';
-import type { Pokemon } from '../types/pokemon.dto';
+import type { Pokemon } from '../types/pokemon';
 import { ROUTES_PATH } from '../../router/routes-path';
 
-interface PokemonListProps {
+type PokemonListProps = {
   result: Pokemon[];
-}
+};
 
 const PokemonList = ({ result }: PokemonListProps) => {
   const navigate = useNavigate();

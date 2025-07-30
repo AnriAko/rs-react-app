@@ -40,12 +40,12 @@ const AboutPage = () => {
               rel="noopener noreferrer"
               className="text-blue-400 underline hover:text-blue-300 flex items-center gap-2"
             >
-              RS School
               <img
                 src="src/static/rss-logo.svg"
                 className="w-12 h-12"
                 alt="RS School Logo"
               />
+              RS School
             </a>
           </div>
         </section>

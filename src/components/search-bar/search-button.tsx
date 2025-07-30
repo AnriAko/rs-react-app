@@ -1,10 +1,10 @@
 import { TEST_IDS } from '../shared/constants/test-ids';
 
-interface SearchButtonProps {
+type SearchButtonProps = {
   handleClick: () => void;
   disabled?: boolean;
   loading?: boolean;
-}
+};
 
 const SearchButton = ({
   handleClick,

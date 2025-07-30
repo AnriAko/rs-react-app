@@ -3,20 +3,20 @@ import { vi } from 'vitest';
 import SearchPage from '../search-page';
 import { MemoryRouter } from 'react-router';
 
-interface Pokemon {
+type Pokemon = {
   name: string;
   url: string;
-}
+};
 
-interface SearchBarProps {
+type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange: (loading: boolean) => void;
   onError: (msg: string) => void;
-}
+};
 
-interface PokemonListProps {
+type PokemonListProps = {
   result: Pokemon[];
-}
+};
 
 vi.mock('../search-bar/search-bar', () => ({
   default: (props: SearchBarProps) => {
@@ -54,22 +54,21 @@ vi.mock('../pokemon-list/pokemon-list', () => ({
 }));
 
 describe('SearchPage', () => {
-  const renderWithRouter = () =>
+  beforeEach(() => {
     render(
       <MemoryRouter>
         <SearchPage />
       </MemoryRouter>
     );
+  });
 
   test('renders main heading and SearchBar and PokemonList', () => {
-    renderWithRouter();
     expect(screen.getByText(/Pokemon search page/i)).toBeInTheDocument();
     expect(screen.getByTestId('setSearchResult-btn')).toBeInTheDocument();
     expect(screen.getByTestId('pokemon-list')).toBeInTheDocument();
   });
 
   test('updates search results when setSearchResult is called', async () => {
-    renderWithRouter();
     fireEvent.click(screen.getByTestId('setSearchResult-btn'));
     await waitFor(() => {
       expect(screen.getByTestId('pokemon-list')).toHaveTextContent('pikachu');
@@ -78,13 +77,11 @@ describe('SearchPage', () => {
   });
 
   test('shows loading spinner when isLoading is true', () => {
-    renderWithRouter();
     fireEvent.click(screen.getByTestId('setLoading-btn'));
     expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
   });
 
   test('shows error message and clears pokemon list when onError is called', async () => {
-    renderWithRouter();
     fireEvent.click(screen.getByTestId('setError-btn'));
     await waitFor(() => {
       expect(

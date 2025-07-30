@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import PokemonDetailsCard from '../pokemon-details-card';
 import { getPokemonDetails } from '../../service/pokemon-service';
 
-import type { PokemonDetails } from '../../types/pokemon-details.dto';
+import type { PokemonDetails } from '../../types/pokemon-details';
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
 

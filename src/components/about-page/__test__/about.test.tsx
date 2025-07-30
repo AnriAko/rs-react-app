@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router';
 import AboutPage from '../about';
 import { vi } from 'vitest';
 import type * as RRDom from 'react-router';
+import { ROUTES_PATH } from '../../../router/routes-path';
 
 const mockNavigate = vi.fn();
 
@@ -59,6 +60,6 @@ describe('AboutPage', () => {
     const button = screen.getByRole('button', { name: /back to main/i });
     fireEvent.click(button);
 
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith(ROUTES_PATH.ROOT);
   });
 });

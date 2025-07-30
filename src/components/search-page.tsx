@@ -2,7 +2,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Outlet, useMatch, useNavigate } from 'react-router';
 import SearchBar from './search-bar/search-bar';
 import PokemonList from './pokemon-list/pokemon-list';
-import type { Pokemon } from './types/pokemon.dto';
+import type { Pokemon } from './types/pokemon';
+import { ROUTES_PATH } from '../router/routes-path';
 
 const SearchPage = () => {
   const [searchResult, setSearchResult] = useState<Pokemon[]>([]);
@@ -104,7 +105,7 @@ const SearchPage = () => {
 
       <div className="mt-10 flex justify-center">
         <button
-          onClick={() => navigate('/about')}
+          onClick={() => navigate(ROUTES_PATH.ABOUT)}
           className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md"
         >
           Go to About Page

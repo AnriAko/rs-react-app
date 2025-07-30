@@ -9,6 +9,6 @@ export const TEST_IDS = {
     btnSearch: 'search-button',
   },
   pokemonDetails: {
-    loading: 'pokemon-loading',
+    loader: 'pokemon-loader',
   },
 };

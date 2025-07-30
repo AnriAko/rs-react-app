@@ -1,36 +1,36 @@
-export interface PokemonDetails {
+export type PokemonDetails = {
   id: number;
   name: string;
   base_experience: number;
   height: number;
   weight: number;
-  types: Type[];
+  types: PokemonType[];
   abilities: Ability[];
   sprites: Sprites;
-}
+};
 
-export interface Type {
+export type PokemonType = {
   slot: number;
   type: {
     name: string;
     url: string;
   };
-}
+};
 
-export interface Ability {
+export type Ability = {
   is_hidden: boolean;
   slot: number;
   ability: {
     name: string;
     url: string;
   };
-}
+};
 
-export interface Sprites {
+export type Sprites = {
   front_default: string;
   other?: {
     ['official-artwork']?: {
       front_default?: string;
     };
   };
-}
+};

@@ -2,53 +2,54 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import SearchInput from './search-input';
 import SearchButton from './search-button';
-import type { Pokemon } from '../types/pokemon.dto';
+import type { Pokemon } from '../types/pokemon';
 import { getPokemons } from '../service/pokemon-service';
 import { useLocalStorage } from '../shared/hooks/use-local-storage';
 
-interface SearchBarProps {
+type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange?: (loading: boolean) => void;
   onError?: (message: string) => void;
-}
+};
 
 const PREVIOUS_REQUEST = 'previousRequest';
-const DEFAULT_LIMIT = 20;
-const DEFAULT_PAGE = 1;
+const DEFAULT_SEARCH_LENGTH_LIMIT = 20;
+const DEFAULT_SEARCH_PAGE = 1;
 
 const SearchBar = ({
   setSearchResult,
   onLoadingChange,
   onError,
 }: SearchBarProps) => {
-  const [limit, setLimit] = useState(DEFAULT_LIMIT);
-  const [page, setPage] = useState(DEFAULT_PAGE);
+  const [limit, setLimit] = useState(DEFAULT_SEARCH_LENGTH_LIMIT);
+  const [page, setPage] = useState(DEFAULT_SEARCH_PAGE);
   const [isLoading, setIsLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [prevUrl, setPrevUrl] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
+  const { search } = useLocation();
+
   const { getValue, setValue } = useLocalStorage<string>(PREVIOUS_REQUEST);
 
   const { limit: queryLimit, page: queryPage } = useMemo(() => {
-    const searchParams = new URLSearchParams(
-      location.search || getValue() || ''
-    );
+    const searchParams = new URLSearchParams(search || getValue() || '');
     return {
-      limit: parseInt(searchParams.get('limit') || '') || DEFAULT_LIMIT,
-      page: parseInt(searchParams.get('page') || '') || DEFAULT_PAGE,
+      limit:
+        parseInt(searchParams.get('limit') || '') ||
+        DEFAULT_SEARCH_LENGTH_LIMIT,
+      page: parseInt(searchParams?.get('page') || '') || DEFAULT_SEARCH_PAGE,
     };
-  }, [location.search, getValue]);
+  }, [search, getValue]);
 
   useEffect(() => {
-    if (!location.search) {
+    if (!search) {
       const savedQuery = getValue();
       if (savedQuery) {
         navigate(savedQuery, { replace: true });
       }
     }
-  }, [location.search, getValue, navigate]);
+  }, [search, getValue, navigate]);
 
   const updateUrlQueryParams = useCallback(
     (limit: number, page: number) => {
@@ -94,7 +95,8 @@ const SearchBar = ({
 
         const url = new URL(fullUrl);
         const limitParam =
-          parseInt(url.searchParams.get('limit') || '') || DEFAULT_LIMIT;
+          parseInt(url.searchParams.get('limit') || '') ||
+          DEFAULT_SEARCH_LENGTH_LIMIT;
         const offset = parseInt(url.searchParams.get('offset') || '') || 0;
         const pageParam = Math.floor(offset / limitParam) + 1;
 
