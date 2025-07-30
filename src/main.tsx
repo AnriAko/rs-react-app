@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import { router } from './router/router.ts';
-import ErrorBoundary from './components/error-boundary/error-boundary.tsx';
+import { ErrorBoundary } from './components/error-boundary/error-boundary.tsx';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

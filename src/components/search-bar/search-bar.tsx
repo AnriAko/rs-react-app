@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import SearchInput from './search-input';
-import SearchButton from './search-button';
-import type { Pokemon } from '../types/pokemon';
-import { getPokemons } from '../service/pokemon-service';
-import { useLocalStorage } from '../shared/hooks/use-local-storage';
+import { SearchInput } from './components/search-input/search-input';
+import { SearchButton } from './components/search-button/search-button';
+import type { Pokemon } from '../shared/types/pokemon';
+import { getPokemons } from '../../api/pokemon-api/pokemon-service';
+import { useLocalStorage } from '../../hooks/use-local-storage';
+import type { StringNullable } from '../../types/string-nullable';
 
 type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
@@ -16,7 +17,7 @@ const PREVIOUS_REQUEST = 'previousRequest';
 const DEFAULT_SEARCH_LENGTH_LIMIT = 20;
 const DEFAULT_SEARCH_PAGE = 1;
 
-const SearchBar = ({
+export const SearchBar = ({
   setSearchResult,
   onLoadingChange,
   onError,
@@ -24,8 +25,8 @@ const SearchBar = ({
   const [limit, setLimit] = useState(DEFAULT_SEARCH_LENGTH_LIMIT);
   const [page, setPage] = useState(DEFAULT_SEARCH_PAGE);
   const [isLoading, setIsLoading] = useState(false);
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
-  const [prevUrl, setPrevUrl] = useState<string | null>(null);
+  const [nextUrl, setNextUrl] = useState<StringNullable>(null);
+  const [prevUrl, setPrevUrl] = useState<StringNullable>(null);
 
   const navigate = useNavigate();
   const { search } = useLocation();
@@ -158,5 +159,3 @@ const SearchBar = ({
     </div>
   );
 };
-
-export default SearchBar;

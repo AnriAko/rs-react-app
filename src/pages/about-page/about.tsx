@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { ROUTES_PATH } from '../../router/routes-path';
 
-const AboutPage = () => {
+export const AboutPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -41,7 +41,7 @@ const AboutPage = () => {
               className="text-blue-400 underline hover:text-blue-300 flex items-center gap-2"
             >
               <img
-                src="src/static/rss-logo.svg"
+                src="rss-logo.svg"
                 className="w-12 h-12"
                 alt="RS School Logo"
               />
@@ -62,5 +62,3 @@ const AboutPage = () => {
     </div>
   );
 };
-
-export default AboutPage;

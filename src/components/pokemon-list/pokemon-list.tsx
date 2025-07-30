@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router';
-import PokemonCard from './pokemon-card';
-import type { Pokemon } from '../types/pokemon';
+import { PokemonCard } from './components/pokemon-card/pokemon-card';
+import type { Pokemon } from '../shared/types/pokemon';
 import { ROUTES_PATH } from '../../router/routes-path';
 
 type PokemonListProps = {
   result: Pokemon[];
 };
 
-const PokemonList = ({ result }: PokemonListProps) => {
+export const PokemonList = ({ result }: PokemonListProps) => {
   const navigate = useNavigate();
 
   const handleSelect = (id: string) => {
@@ -42,5 +42,3 @@ const PokemonList = ({ result }: PokemonListProps) => {
     </div>
   );
 };
-
-export default PokemonList;

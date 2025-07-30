@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { ROUTES_PATH } from '../../router/routes-path';
 
-const NotFoundPage = () => {
+export const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -18,5 +18,3 @@ const NotFoundPage = () => {
     </div>
   );
 };
-
-export default NotFoundPage;

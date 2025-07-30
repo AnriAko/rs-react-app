@@ -4,7 +4,7 @@ type Props = {
   onSelect: (id: string) => void;
 };
 
-const PokemonCard = ({ name, id, onSelect }: Props) => (
+export const PokemonCard = ({ name, id, onSelect }: Props) => (
   <div
     onClick={() => onSelect(id)}
     className="bg-gray-800 text-white rounded-lg p-4 cursor-pointer hover:bg-gray-700 transition max-h-15"
@@ -14,4 +14,3 @@ const PokemonCard = ({ name, id, onSelect }: Props) => (
     </h3>{' '}
   </div>
 );
-export default PokemonCard;

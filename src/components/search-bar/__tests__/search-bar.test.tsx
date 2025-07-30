@@ -7,7 +7,7 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import SearchBar from '../search-bar';
-import { getPokemons } from '../../service/pokemon-service';
+import { getPokemons } from '../../../api/pokemon-api/pokemon-service';
 import { vi } from 'vitest';
 import { TEST_IDS } from '../../shared/constants/test-ids';
 

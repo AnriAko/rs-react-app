@@ -1,4 +1,4 @@
-import { TEST_IDS } from '../shared/constants/test-ids';
+import { TEST_IDS } from '../../../shared/constants/test-ids';
 
 type SearchButtonProps = {
   handleClick: () => void;
@@ -6,7 +6,7 @@ type SearchButtonProps = {
   loading?: boolean;
 };
 
-const SearchButton = ({
+export const SearchButton = ({
   handleClick,
   disabled,
   loading,
@@ -24,5 +24,3 @@ const SearchButton = ({
     </button>
   );
 };
-
-export default SearchButton;

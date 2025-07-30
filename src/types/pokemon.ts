@@ -1,7 +1,9 @@
+import type { StringNullable } from './string-nullable';
+
 export type GetPokemons = {
   count: number;
-  next: string | null;
-  previous: string | null;
+  next: StringNullable;
+  previous: StringNullable;
   results: Pokemon[];
 };
 

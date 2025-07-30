@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { getPokemonDetails } from '../service/pokemon-service';
-import type { PokemonDetails } from '../types/pokemon-details';
-import { TEST_IDS } from '../shared/constants/test-ids';
-import { ROUTES_PATH } from '../../router/routes-path';
+import { getPokemonDetails } from '../../../../api/pokemon-api/pokemon-service';
+import type { PokemonDetails } from './types/pokemon-details';
+import { TEST_IDS } from '../../../shared/constants/test-ids';
+import { ROUTES_PATH } from '../../../../router/routes-path';
 
-export default function PokemonDetailsCard() {
+export const PokemonDetailsCard = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
 
@@ -102,4 +102,4 @@ export default function PokemonDetailsCard() {
       )}
     </div>
   );
-}
+};

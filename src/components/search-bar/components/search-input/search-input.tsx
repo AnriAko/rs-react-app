@@ -1,17 +1,18 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
-import { TEST_IDS } from '../shared/constants/test-ids';
+import { TEST_IDS } from '../../../shared/constants/test-ids';
+import type { StringNullable } from '../../../../types/string-nullable';
 
 type SearchInputProps = {
   limit: number;
   page: number;
   setSearchRequest: (limit: number, page: number) => void;
   isLoading: boolean;
-  prevUrl: string | null;
-  nextUrl: string | null;
+  prevUrl: StringNullable;
+  nextUrl: StringNullable;
   fetchFromFullUrl: (url: string) => void;
 };
 
-const SearchInput = ({
+export const SearchInput = ({
   limit,
   page,
   setSearchRequest,
@@ -102,5 +103,3 @@ const SearchInput = ({
     </div>
   );
 };
-
-export default SearchInput;

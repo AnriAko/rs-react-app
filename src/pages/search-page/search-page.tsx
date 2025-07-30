@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Outlet, useMatch, useNavigate } from 'react-router';
-import SearchBar from './search-bar/search-bar';
-import PokemonList from './pokemon-list/pokemon-list';
-import type { Pokemon } from './types/pokemon';
-import { ROUTES_PATH } from '../router/routes-path';
+import { SearchBar } from '../../components/search-bar/search-bar';
+import { PokemonList } from '../../components/pokemon-list/pokemon-list';
+import type { Pokemon } from '../../components/shared/types/pokemon';
+import { ROUTES_PATH } from '../../router/routes-path';
 
-const SearchPage = () => {
+export const SearchPage = () => {
   const [searchResult, setSearchResult] = useState<Pokemon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -114,5 +114,3 @@ const SearchPage = () => {
     </div>
   );
 };
-
-export default SearchPage;

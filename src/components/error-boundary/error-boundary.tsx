@@ -8,7 +8,7 @@ type State = {
   hasError: boolean;
 };
 
-class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   state: State = {
     hasError: false,
   };
@@ -36,5 +36,3 @@ class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;

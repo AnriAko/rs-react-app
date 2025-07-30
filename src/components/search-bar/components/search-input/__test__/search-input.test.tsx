@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import SearchInput from '../search-input';
-import { TEST_IDS } from '../../shared/constants/test-ids';
+import { SearchInput } from '../search-input';
+import { TEST_IDS } from '../../../../shared/constants/test-ids';
 
 describe('SearchInput', () => {
   const fetchMock = vi.fn();
