@@ -1,4 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { ROUTES_PATH } from '../../router/routes-path';
 
 const AboutPage = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const AboutPage = () => {
 
         <div className="pt-8">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate(ROUTES_PATH.ROOT)}
             className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
           >
             Back to Main

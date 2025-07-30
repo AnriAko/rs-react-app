@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import SearchInput from './search-input';
 import SearchButton from './search-button';
 import type { Pokemon } from '../types/pokemon.dto';

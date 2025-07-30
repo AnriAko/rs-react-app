@@ -5,7 +5,7 @@ import {
   waitFor,
   act,
 } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import SearchBar from '../search-bar';
 import { getPokemons } from '../../service/pokemon-service';
 import { vi } from 'vitest';

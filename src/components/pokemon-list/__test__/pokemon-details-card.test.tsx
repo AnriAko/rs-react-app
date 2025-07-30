@@ -1,5 +1,5 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import PokemonDetailsCard from '../pokemon-details-card';
 import { getPokemonDetails } from '../../service/pokemon-service';
 

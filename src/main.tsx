@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './app/App.tsx';
+import { RouterProvider } from 'react-router';
+import { router } from './router/router.ts';
 import ErrorBoundary from './components/error-boundary/error-boundary.tsx';
-import { BrowserRouter } from 'react-router-dom';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -10,9 +10,7 @@ if (rootElement) {
   root.render(
     <StrictMode>
       <ErrorBoundary>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </ErrorBoundary>
     </StrictMode>
   );

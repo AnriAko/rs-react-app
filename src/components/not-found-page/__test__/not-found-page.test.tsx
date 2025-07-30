@@ -1,12 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import NotFoundPage from '../not-found-page';
 import { vi } from 'vitest';
+import { ROUTES_PATH } from '../../../router/routes-path';
 
 const mockNavigate = vi.fn();
 
-vi.mock('react-router-dom', async () => {
-  const actual = (await vi.importActual('react-router-dom')) as object;
+vi.mock('react-router', async () => {
+  const actual = (await vi.importActual('react-router')) as object;
   return {
     ...actual,
     useNavigate: () => mockNavigate,
@@ -39,6 +40,6 @@ describe('NotFoundPage', () => {
 
     const button = screen.getByRole('button', { name: /go to home/i });
     fireEvent.click(button);
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith(ROUTES_PATH.ROOT);
   });
 });

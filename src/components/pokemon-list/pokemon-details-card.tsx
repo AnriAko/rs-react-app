@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { getPokemonDetails } from '../service/pokemon-service';
 import type { PokemonDetails } from '../types/pokemon-details.dto';
 import { TEST_IDS } from '../shared/constants/test-ids';
+import { ROUTES_PATH } from '../../router/routes-path';
 
 export default function PokemonDetailsCard() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function PokemonDetailsCard() {
   }, [id]);
 
   const handleClose = () => {
-    navigate('/', { replace: true });
+    navigate(ROUTES_PATH.ROOT, { replace: true });
   };
 
   if (!id) return null;

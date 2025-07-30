@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import PokemonCard from './pokemon-card';
 import type { Pokemon } from '../types/pokemon.dto';
+import { ROUTES_PATH } from '../../router/routes-path';
 
 interface PokemonListProps {
   result: Pokemon[];
@@ -10,7 +11,7 @@ const PokemonList = ({ result }: PokemonListProps) => {
   const navigate = useNavigate();
 
   const handleSelect = (id: string) => {
-    navigate(`details/${id}`);
+    navigate(ROUTES_PATH.getDetailsPath(id));
   };
 
   return (
