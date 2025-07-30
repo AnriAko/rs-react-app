@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import { PokemonCard } from './components/pokemon-card/pokemon-card';
-import type { Pokemon } from '../shared/types/pokemon';
+import type { Pokemon } from '../../types/pokemon';
 import { ROUTES_PATH } from '../../router/routes-path';
 
 type PokemonListProps = {

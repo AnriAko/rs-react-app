@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { SearchInput } from './components/search-input/search-input';
 import { SearchButton } from './components/search-button/search-button';
-import type { Pokemon } from '../shared/types/pokemon';
+import type { Pokemon } from '../../types/pokemon';
 import { getPokemons } from '../../api/pokemon-api/pokemon-service';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import type { StringNullable } from '../../types/string-nullable';

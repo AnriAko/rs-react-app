@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Outlet, useMatch, useNavigate } from 'react-router';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { PokemonList } from '../../components/pokemon-list/pokemon-list';
-import type { Pokemon } from '../../components/shared/types/pokemon';
+import type { Pokemon } from '../../types/pokemon';
 import { ROUTES_PATH } from '../../router/routes-path';
 
 export const SearchPage = () => {
