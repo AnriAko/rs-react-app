@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Outlet, useMatch, useNavigate } from 'react-router';
-import { SearchBar } from '../../components/search-bar/search-bar';
-import { PokemonList } from '../../components/pokemon-list/pokemon-list';
-import type { Pokemon } from '../../types/pokemon';
-import { ROUTES_PATH } from '../../router/routes-path';
+import { SearchBar } from '@components/search-bar';
+import { PokemonList } from '@components/pokemon-list';
+import type { Pokemon } from '@api/pokemon-api/types/pokemon';
+import { ROUTES_PATH } from '@router/routes-path';
 
 export const SearchPage = () => {
   const [searchResult, setSearchResult] = useState<Pokemon[]>([]);

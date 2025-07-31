@@ -7,6 +7,7 @@ export const TEST_IDS = {
   },
   bar: {
     btnSearch: 'search-button',
+    container: 'search-bar',
   },
   pokemonDetails: {
     loader: 'pokemon-loader',

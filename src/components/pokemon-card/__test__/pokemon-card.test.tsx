@@ -1,5 +1,5 @@
+import { PokemonCard } from '@components/pokemon-card/pokemon-card';
 import { render, screen, fireEvent } from '@testing-library/react';
-import PokemonCard from '../pokemon-card';
 
 describe('PokemonCard', () => {
   const mockOnSelect = vi.fn();

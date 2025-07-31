@@ -1,4 +1,4 @@
-import { TEST_IDS } from '../../../shared/constants/test-ids';
+import { TEST_IDS } from '@constants/test-ids';
 
 type SearchButtonProps = {
   handleClick: () => void;

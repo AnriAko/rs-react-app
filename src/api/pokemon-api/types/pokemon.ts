@@ -1,4 +1,4 @@
-import type { StringNullable } from './string-nullable';
+import type { StringNullable } from '../../../common-types/string-nullable';
 
 export type GetPokemons = {
   count: number;

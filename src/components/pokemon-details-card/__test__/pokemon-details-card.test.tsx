@@ -1,13 +1,13 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { PokemonDetailsCard } from '../pokemon-details-card';
-import { getPokemonDetails } from '../../../../../api/pokemon-api/pokemon-service';
+import { PokemonDetailsCard } from '@components/pokemon-details-card/pokemon-details-card';
+import { getPokemonDetails } from '@api/pokemon-api/pokemon-service';
 
-import type { PokemonDetails } from '../types/pokemon-details';
+import type { PokemonDetails } from '@api/pokemon-api/types/pokemon-details';
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
 
-vi.mock('../../service/pokemon-service', () => ({
+vi.mock('@api/pokemon-api/pokemon-service', () => ({
   getPokemonDetails: vi.fn(),
 }));
 

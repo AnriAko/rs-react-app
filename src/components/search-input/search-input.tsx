@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
-import { TEST_IDS } from '../../../shared/constants/test-ids';
-import type { StringNullable } from '../../../../types/string-nullable';
+import { TEST_IDS } from '@constants/test-ids';
+import { StringNullable } from '@common-types/string-nullable';
 
 type SearchInputProps = {
   limit: number;

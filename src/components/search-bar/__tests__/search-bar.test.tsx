@@ -6,19 +6,21 @@ import {
   act,
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import SearchBar from '../search-bar';
-import { getPokemons } from '../../../api/pokemon-api/pokemon-service';
 import { vi } from 'vitest';
-import { TEST_IDS } from '../../shared/constants/test-ids';
+import { SearchBar } from '@components/search-bar/search-bar';
+import { getPokemons } from '@api/pokemon-api/pokemon-service';
+import { TEST_IDS } from '@constants/test-ids';
 
-vi.mock('../../shared/hooks/use-local-storage', () => ({
+vi.mock('@hooks/use-local-storage', () => ({
   useLocalStorage: () => ({
     getValue: vi.fn(() => ''),
     setValue: vi.fn(),
   }),
 }));
 
-vi.mock('../../service/pokemon-service');
+vi.mock('@api/pokemon-api/pokemon-service', () => ({
+  getPokemons: vi.fn(),
+}));
 
 const dummyPokemonsResponse = {
   count: 2,
@@ -52,17 +54,18 @@ describe('SearchBar component', () => {
       </MemoryRouter>
     );
 
-  it('renders input and button', async () => {
+  it('renders SearchBar wrapper and children inputs/buttons', async () => {
     await act(async () => {
       renderWithRouter();
     });
 
+    expect(screen.getByTestId(TEST_IDS.bar.container)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.search.inputPage)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.bar.btnSearch)).toBeInTheDocument();
   });
 
-  it('fetches and sets results on search', async () => {
+  it('fetches and sets results on search click', async () => {
     await act(async () => {
       renderWithRouter();
     });
@@ -106,7 +109,7 @@ describe('SearchBar component', () => {
     expect(button).toHaveTextContent(/search/i);
   });
 
-  it('handles fetch errors', async () => {
+  it('handles fetch errors and calls onError', async () => {
     mockedGetPokemons.mockRejectedValue(new Error('Network Error'));
 
     await act(async () => {

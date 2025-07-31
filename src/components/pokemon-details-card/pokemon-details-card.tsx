@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { getPokemonDetails } from '../../../../api/pokemon-api/pokemon-service';
-import type { PokemonDetails } from './types/pokemon-details';
-import { TEST_IDS } from '../../../shared/constants/test-ids';
-import { ROUTES_PATH } from '../../../../router/routes-path';
+import { getPokemonDetails } from '@api/pokemon-api/pokemon-service';
+import type { PokemonDetails } from '@api/pokemon-api/types/pokemon-details';
+import { TEST_IDS } from '@constants/test-ids';
+import { ROUTES_PATH } from '@router/routes-path';
 
 export const PokemonDetailsCard = () => {
   const navigate = useNavigate();

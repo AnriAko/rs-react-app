@@ -1,5 +1,5 @@
+import { ROUTES_PATH } from '@router/routes-path';
 import { useNavigate } from 'react-router';
-import { ROUTES_PATH } from '../../router/routes-path';
 
 export const AboutPage = () => {
   const navigate = useNavigate();

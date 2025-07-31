@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { SearchButton } from '../search-button';
+import { SearchButton } from '@components/search-button/search-button';
 import { vi } from 'vitest';
-import { TEST_IDS } from '../../../../shared/constants/test-ids';
+import { TEST_IDS } from '@constants/test-ids';
 
 describe('SearchButton', () => {
   let handleClickMock: ReturnType<typeof vi.fn>;

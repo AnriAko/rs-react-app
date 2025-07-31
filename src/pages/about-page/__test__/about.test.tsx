@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import AboutPage from '../about';
+import { AboutPage } from '@pages/about-page/about-page';
 import { vi } from 'vitest';
 import type * as RRDom from 'react-router';
-import { ROUTES_PATH } from '../../../router/routes-path';
+import { ROUTES_PATH } from '@router/routes-path';
 
 const mockNavigate = vi.fn();
 

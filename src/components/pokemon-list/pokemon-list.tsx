@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
-import { PokemonCard } from './components/pokemon-card/pokemon-card';
-import type { Pokemon } from '../../types/pokemon';
-import { ROUTES_PATH } from '../../router/routes-path';
+import { PokemonCard } from '@components/pokemon-card';
+import type { Pokemon } from '@api/pokemon-api/types/pokemon';
+import { ROUTES_PATH } from '@router/routes-path';
 
 type PokemonListProps = {
   result: Pokemon[];

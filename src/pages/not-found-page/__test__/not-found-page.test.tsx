@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import NotFoundPage from '../not-found-page';
+import { NotFoundPage } from '@pages/not-found-page/not-found-page';
 import { vi } from 'vitest';
-import { ROUTES_PATH } from '../../../router/routes-path';
+import { ROUTES_PATH } from '@router/routes-path';
 
 const mockNavigate = vi.fn();
 

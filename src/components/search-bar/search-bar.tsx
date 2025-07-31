@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { SearchInput } from './components/search-input/search-input';
-import { SearchButton } from './components/search-button/search-button';
-import type { Pokemon } from '../../types/pokemon';
-import { getPokemons } from '../../api/pokemon-api/pokemon-service';
-import { useLocalStorage } from '../../hooks/use-local-storage';
-import type { StringNullable } from '../../types/string-nullable';
+import { SearchInput } from '@components/search-input';
+import { SearchButton } from '@components/search-button';
+import type { Pokemon } from '@api/pokemon-api/types/pokemon';
+import { getPokemons } from '@api/pokemon-api/pokemon-service';
+import { useLocalStorage } from '@hooks/use-local-storage';
+import { StringNullable } from '@common-types/string-nullable';
+import { TEST_IDS } from '@constants/test-ids';
 
 type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
@@ -139,7 +140,10 @@ export const SearchBar = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-gray-800 rounded-md">
+    <div
+      className="flex flex-col gap-4 p-4 bg-gray-800 rounded-md"
+      data-testid={TEST_IDS.bar.container}
+    >
       <div className="flex flex-row items-end gap-4">
         <SearchInput
           limit={limit}

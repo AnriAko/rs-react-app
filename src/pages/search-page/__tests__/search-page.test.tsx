@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import { SearchPage } from '../search-page';
 import { MemoryRouter } from 'react-router';
+import { SearchPage } from '@pages/search-page/search-page';
 
 type Pokemon = {
   name: string;
@@ -18,37 +18,35 @@ type PokemonListProps = {
   result: Pokemon[];
 };
 
-vi.mock('../search-bar/search-bar', () => ({
-  default: (props: SearchBarProps) => {
-    return (
-      <div>
-        <button
-          data-testid="setSearchResult-btn"
-          onClick={() =>
-            props.setSearchResult([{ name: 'pikachu', url: 'url1' }])
-          }
-        >
-          Set Search Result
-        </button>
-        <button
-          data-testid="setLoading-btn"
-          onClick={() => props.onLoadingChange(true)}
-        >
-          Set Loading True
-        </button>
-        <button
-          data-testid="setError-btn"
-          onClick={() => props.onError('Test error message')}
-        >
-          Set Error
-        </button>
-      </div>
-    );
-  },
+vi.mock('@components/search-bar', () => ({
+  SearchBar: (props: SearchBarProps) => (
+    <div>
+      <button
+        data-testid="setSearchResult-btn"
+        onClick={() =>
+          props.setSearchResult([{ name: 'pikachu', url: 'url1' }])
+        }
+      >
+        Set Search Result
+      </button>
+      <button
+        data-testid="setLoading-btn"
+        onClick={() => props.onLoadingChange(true)}
+      >
+        Set Loading True
+      </button>
+      <button
+        data-testid="setError-btn"
+        onClick={() => props.onError('Test error message')}
+      >
+        Set Error
+      </button>
+    </div>
+  ),
 }));
 
-vi.mock('../pokemon-list/pokemon-list', () => ({
-  default: (props: PokemonListProps) => (
+vi.mock('@components/pokemon-list', () => ({
+  PokemonList: (props: PokemonListProps) => (
     <div data-testid="pokemon-list">{JSON.stringify(props.result)}</div>
   ),
 }));
