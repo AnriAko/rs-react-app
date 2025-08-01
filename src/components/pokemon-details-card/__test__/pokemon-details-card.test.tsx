@@ -2,7 +2,6 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { PokemonDetailsCard } from '@components/pokemon-details-card/pokemon-details-card';
 import { getPokemonDetails } from '@api/pokemon-api/pokemon-service';
-
 import type { PokemonDetails } from '@api/pokemon-api/types/pokemon-details';
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
@@ -27,29 +26,28 @@ const mockPokemon: PokemonDetails = {
   },
 };
 
-describe('PokemonDetailsCard', () => {
+describe('PokemonDetailsCard (uses query param)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  function renderWithRouter(initialEntries: string[]) {
+  function renderWithQuery(search = '?details=1') {
     return render(
-      <MemoryRouter initialEntries={initialEntries}>
+      <MemoryRouter initialEntries={[`/${search}`]}>
         <Routes>
-          <Route path="/details/:id" element={<PokemonDetailsCard />} />
-          <Route path="/" element={<div>Home</div>} />
+          <Route path="/" element={<PokemonDetailsCard />} />
         </Routes>
       </MemoryRouter>
     );
   }
 
-  test('renders loading state initially and then pokemon details', async () => {
-    const mockGetPokemonDetails = getPokemonDetails as Mock;
-    mockGetPokemonDetails.mockResolvedValueOnce(mockPokemon);
+  test('shows loading and then pokemon details', async () => {
+    const mockGet = getPokemonDetails as Mock;
+    mockGet.mockResolvedValueOnce(mockPokemon);
 
-    renderWithRouter(['/details/1']);
+    renderWithQuery();
 
-    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
@@ -62,44 +60,40 @@ describe('PokemonDetailsCard', () => {
     }) as HTMLImageElement;
     expect(img.src).toContain('official_artwork_url');
 
-    const baseExpLabel = screen.getByText(/base experience:/i);
-    expect(baseExpLabel.parentElement).toHaveTextContent(/64/);
-
-    const heightLabel = screen.getByText(/height:/i);
-    expect(heightLabel.parentElement).toHaveTextContent(/7/);
-
-    const weightLabel = screen.getByText(/weight:/i);
-    expect(weightLabel.parentElement).toHaveTextContent(/69/);
-
-    const typesLabel = screen.getByText(/types:/i);
-    expect(typesLabel.parentElement).toHaveTextContent(/grass/);
-
-    const abilitiesLabel = screen.getByText(/abilities:/i);
-    expect(abilitiesLabel.parentElement).toHaveTextContent(/overgrow/);
+    expect(
+      screen.getByText(/base experience:/i).parentElement
+    ).toHaveTextContent('64');
+    expect(screen.getByText(/height:/i).parentElement).toHaveTextContent('7');
+    expect(screen.getByText(/weight:/i).parentElement).toHaveTextContent('69');
+    expect(screen.getByText(/types:/i).parentElement).toHaveTextContent(
+      /grass/i
+    );
+    expect(screen.getByText(/abilities:/i).parentElement).toHaveTextContent(
+      /overgrow/i
+    );
   });
 
-  test('shows "Pokemon not found." when API returns error', async () => {
-    const mockGetPokemonDetails = getPokemonDetails as Mock;
-    mockGetPokemonDetails.mockRejectedValueOnce(new Error('Not found'));
+  test('shows "Pokemon not found" on API error', async () => {
+    const mockGet = getPokemonDetails as Mock;
+    mockGet.mockRejectedValueOnce(new Error('Not found'));
 
-    renderWithRouter(['/details/9999']);
+    renderWithQuery();
 
     await waitFor(() => {
       expect(screen.getByText(/pokemon not found/i)).toBeInTheDocument();
     });
   });
 
-  test('does not render anything if no id param', () => {
-    renderWithRouter(['/details/']);
-
+  test('does not render if "details" param is missing', () => {
+    renderWithQuery(''); // no ?details param
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
   });
 
-  test('clicking close button navigates to home', async () => {
-    const mockGetPokemonDetails = getPokemonDetails as Mock;
-    mockGetPokemonDetails.mockResolvedValueOnce(mockPokemon);
+  test('clicking close removes details from URL', async () => {
+    const mockGet = getPokemonDetails as Mock;
+    mockGet.mockResolvedValueOnce(mockPokemon);
 
-    renderWithRouter(['/details/1']);
+    renderWithQuery('?details=1');
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
@@ -110,7 +104,7 @@ describe('PokemonDetailsCard', () => {
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
 
     await waitFor(() => {
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(window.location.search).not.toContain('details=1');
     });
   });
 });

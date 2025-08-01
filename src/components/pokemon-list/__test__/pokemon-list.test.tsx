@@ -73,14 +73,16 @@ describe('PokemonList', () => {
 
     cards.forEach((card, index) => {
       fireEvent.click(card);
-      expect(navigateMock).toHaveBeenCalledWith(`/details/${index + 1}`);
+      expect(navigateMock).toHaveBeenCalledWith({
+        search: `details=${index + 1}`,
+      });
     });
   });
 
   test('handles invalid URL and calls console.error', () => {
     const badPokemons: Pokemon[] = [
       {
-        name: 'missingid',
+        name: 'LostPikachu',
         url: 'https://pokeapi.co/api/v2/pokemon/not-a-number/',
       },
     ];

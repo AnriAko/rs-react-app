@@ -18,9 +18,10 @@ describe('App Router', () => {
   });
 
   test('renders PokemonDetailsCard on details path', async () => {
-    const detailsPath = `/${ROUTES_PATH.DETAILS.replace(':id', '1')}`;
-    renderAt(detailsPath);
-    expect(await screen.findByText(/close/i)).toBeInTheDocument();
+    renderAt('/?details=1');
+    expect(
+      await screen.findByRole('button', { name: /close/i })
+    ).toBeInTheDocument();
   });
 
   test('renders AboutPage on about path', () => {

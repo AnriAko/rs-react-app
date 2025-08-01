@@ -1,7 +1,6 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { PokemonCard } from '@components/pokemon-card';
 import type { Pokemon } from '@api/pokemon-api/types/pokemon';
-import { ROUTES_PATH } from '@router/routes-path';
 
 type PokemonListProps = {
   result: Pokemon[];
@@ -9,9 +8,12 @@ type PokemonListProps = {
 
 export const PokemonList = ({ result }: PokemonListProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSelect = (id: string) => {
-    navigate(ROUTES_PATH.getDetailsPath(id));
+    const params = new URLSearchParams(location.search);
+    params.set('details', id);
+    navigate({ search: params.toString() });
   };
 
   return (

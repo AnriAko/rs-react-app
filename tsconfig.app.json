@@ -12,7 +12,8 @@
       "@assets/*": ["assets/*"],
       "@router/*": ["router/*"],
       "@constants/*": ["constants/*"],
-      "@common-types/*": ["common-types/*"]
+      "@common-types/*": ["common-types/*"],
+      "@hoc/*": ["hoc/*"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",

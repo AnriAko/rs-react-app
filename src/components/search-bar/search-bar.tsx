@@ -124,9 +124,17 @@ export const SearchBar = ({
   );
 
   useEffect(() => {
+    if (search) {
+      setValue(search);
+    }
+  }, [search, setValue]);
+
+  useEffect(() => {
     setLimit(queryLimit);
     setPage(queryPage);
-    void fetchPokemons(queryLimit, queryPage);
+    if (queryLimit && queryPage) {
+      void fetchPokemons(queryLimit, queryPage);
+    }
   }, [queryLimit, queryPage, fetchPokemons]);
 
   const setSearchRequest = (newLimit: number, newPage: number) => {
@@ -135,6 +143,8 @@ export const SearchBar = ({
   };
 
   const handleSearchClick = async () => {
+    if (limit === queryLimit && page === queryPage) return;
+
     updateUrlQueryParams(limit, page);
     await fetchPokemons(limit, page);
   };

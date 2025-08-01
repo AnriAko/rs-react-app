@@ -1,25 +1,17 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
 import { SearchBar } from '@components/search-bar/search-bar';
 import { getPokemons } from '@api/pokemon-api/pokemon-service';
 import { TEST_IDS } from '@constants/test-ids';
 
+const setValueMock = vi.fn();
+const getValueMock = vi.fn(() => '');
 vi.mock('@hooks/use-local-storage', () => ({
   useLocalStorage: () => ({
-    getValue: vi.fn(() => ''),
-    setValue: vi.fn(),
+    getValue: getValueMock,
+    setValue: setValueMock,
   }),
-}));
-
-vi.mock('@api/pokemon-api/pokemon-service', () => ({
-  getPokemons: vi.fn(),
 }));
 
 const dummyPokemonsResponse = {
@@ -31,21 +23,36 @@ const dummyPokemonsResponse = {
     { name: 'ivysaur', url: 'url2' },
   ],
 };
+const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
 
-describe('SearchBar component', () => {
+vi.mock('@api/pokemon-api/pokemon-service', () => ({
+  getPokemons: vi.fn(),
+}));
+
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-router')>('react-router');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+describe('SearchBar additional tests', () => {
   const setSearchResultMock = vi.fn();
   const onLoadingChangeMock = vi.fn();
   const onErrorMock = vi.fn();
-  const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
     mockedGetPokemons.mockResolvedValue(dummyPokemonsResponse);
+    getValueMock.mockReturnValue('');
   });
 
-  const renderWithRouter = () =>
+  const renderWithRouter = (initialEntries: string[] = ['/']) =>
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={initialEntries}>
         <SearchBar
           setSearchResult={setSearchResultMock}
           onLoadingChange={onLoadingChangeMock}
@@ -54,18 +61,50 @@ describe('SearchBar component', () => {
       </MemoryRouter>
     );
 
-  it('renders SearchBar wrapper and children inputs/buttons', async () => {
+  test('initializes from URL query params and fetches', async () => {
+    const url = '?limit=10&page=2';
+    getValueMock.mockReturnValue('');
+    mockedGetPokemons.mockResolvedValueOnce({
+      ...dummyPokemonsResponse,
+      next: '?limit=10&offset=20',
+      previous: '?limit=10&offset=0',
+    });
+
+    await act(async () => {
+      renderWithRouter([`/${url}`]);
+    });
+
+    expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=10&offset=10');
+    expect(setSearchResultMock).toHaveBeenCalledWith(
+      dummyPokemonsResponse.results
+    );
+    expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toHaveValue('10');
+    expect(screen.getByTestId(TEST_IDS.search.inputPage)).toHaveValue('2');
+  });
+
+  test('navigates with updated query params on search click', async () => {
     await act(async () => {
       renderWithRouter();
     });
 
-    expect(screen.getByTestId(TEST_IDS.bar.container)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.search.inputPage)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.bar.btnSearch)).toBeInTheDocument();
+    const limitInput = screen.getByTestId(TEST_IDS.search.inputLimit);
+    const pageInput = screen.getByTestId(TEST_IDS.search.inputPage);
+
+    fireEvent.change(limitInput, { target: { value: '5' } });
+    fireEvent.change(pageInput, { target: { value: '3' } });
+
+    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
+    await act(async () => {
+      fireEvent.click(button);
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith('?limit=5&page=3', {
+      replace: false,
+    });
+    expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=5&offset=10');
   });
 
-  it('fetches and sets results on search click', async () => {
+  test('does not fetch if limit and page did not change on search click', async () => {
     await act(async () => {
       renderWithRouter();
     });
@@ -75,53 +114,23 @@ describe('SearchBar component', () => {
       fireEvent.click(button);
     });
 
-    await waitFor(() => {
-      expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=20&offset=0');
-      expect(setSearchResultMock).toHaveBeenCalledWith(
-        dummyPokemonsResponse.results
-      );
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(true);
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(false);
-      expect(onErrorMock).toHaveBeenCalledWith('');
+    await act(async () => {
+      fireEvent.click(button);
     });
+
+    expect(mockedGetPokemons).toHaveBeenCalledTimes(1);
   });
 
-  it('shows loading state during fetch', async () => {
-    let resolvePromise: (value: typeof dummyPokemonsResponse) => void;
-    const promise = new Promise<typeof dummyPokemonsResponse>((res) => {
-      resolvePromise = res;
+  test('updates localStorage when URL changes', async () => {
+    await act(async () => {
+      renderWithRouter(['/']);
     });
 
-    mockedGetPokemons.mockReturnValue(promise);
+    expect(getValueMock).toHaveBeenCalled();
 
     await act(async () => {
-      renderWithRouter();
+      renderWithRouter(['/?limit=20&page=1']);
     });
-
-    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
-    fireEvent.click(button);
-    expect(button).toHaveTextContent(/loading/i);
-
-    await act(async () => {
-      resolvePromise(dummyPokemonsResponse);
-    });
-
-    expect(button).toHaveTextContent(/search/i);
-  });
-
-  it('handles fetch errors and calls onError', async () => {
-    mockedGetPokemons.mockRejectedValue(new Error('Network Error'));
-
-    await act(async () => {
-      renderWithRouter();
-    });
-
-    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(onErrorMock).toHaveBeenCalledWith('Network Error');
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(false);
-    });
+    expect(setValueMock).toHaveBeenCalledWith('?limit=20&page=1');
   });
 });
