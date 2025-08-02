@@ -1,17 +1,19 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
+import cl from 'classnames';
 import { SearchInput } from '@components/search-input';
-import { SearchButton } from '@components/search-button';
 import type { Pokemon } from '@api/pokemon-api/types/pokemon';
 import { getPokemons } from '@api/pokemon-api/pokemon-service';
 import { useLocalStorage } from '@hooks/use-local-storage';
-import { StringNullable } from '@common-types/string-nullable';
+import { StringNullable } from 'types/string-nullable';
 import { TEST_IDS } from '@constants/test-ids';
+import { CustomButton } from '@ui/custom-button';
 
 type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange?: (loading: boolean) => void;
   onError?: (message: string) => void;
+  theme: 'light' | 'dark';
 };
 
 const PREVIOUS_REQUEST = 'previousRequest';
@@ -22,6 +24,7 @@ export const SearchBar = ({
   setSearchResult,
   onLoadingChange,
   onError,
+  theme,
 }: SearchBarProps) => {
   const [limit, setLimit] = useState(DEFAULT_SEARCH_LENGTH_LIMIT);
   const [page, setPage] = useState(DEFAULT_SEARCH_PAGE);
@@ -151,7 +154,10 @@ export const SearchBar = ({
 
   return (
     <div
-      className="flex flex-col gap-4 p-4 bg-gray-800 rounded-md"
+      className={cl('flex flex-col gap-4 p-4 rounded-md', {
+        'bg-gray-800': theme === 'dark',
+        'bg-gray-200': theme === 'light',
+      })}
       data-testid={TEST_IDS.bar.container}
     >
       <div className="flex flex-row items-end gap-4">
@@ -164,11 +170,14 @@ export const SearchBar = ({
           nextUrl={nextUrl}
           fetchFromFullUrl={fetchFromFullUrl}
         />
-        <SearchButton
-          handleClick={handleSearchClick}
+
+        <CustomButton
+          onClick={handleSearchClick}
           disabled={isLoading}
-          loading={isLoading}
-        />
+          dataTestId={TEST_IDS.bar.btnSearch}
+        >
+          {isLoading ? 'Loading...' : 'Search'}
+        </CustomButton>
       </div>
     </div>
   );

@@ -6,10 +6,14 @@ import { TEST_IDS } from '@constants/test-ids';
 import { LoadingWrapper } from '@hoc/loading-wrapper';
 import { PokemonInfo } from '@components/pokemon-details-card/components/pokemon-info/pokemon-info';
 import { useQueryParams } from '@hooks/use-query-params';
+import { CustomButton } from '@ui/custom-button';
+import { useTheme } from '@context/theme/theme-context';
+import cl from 'classnames';
 
 export const PokemonDetailsCard = () => {
   const navigate = useNavigate();
   const query = useQueryParams();
+  const { theme } = useTheme();
 
   const id = query.get('details');
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
@@ -43,7 +47,12 @@ export const PokemonDetailsCard = () => {
 
   return (
     <LoadingWrapper loading={isLoading}>
-      <div className="mt-5 w-full rounded-xl border bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+      <div
+        className={cl('mt-5 w-full rounded-xl border-4 p-4', {
+          'bg-white border-gray-200 text-gray-900': theme === 'light',
+          'bg-gray-900 border-gray-800 text-white': theme === 'dark',
+        })}
+      >
         <div className="flex justify-between items-center mb-4">
           <h2
             data-testid={TEST_IDS.pokemonDetails.loader}
@@ -51,13 +60,12 @@ export const PokemonDetailsCard = () => {
           >
             {pokemon?.name}
           </h2>
-          <button
+          <CustomButton
             onClick={handleClose}
-            className="text-sm px-3 py-1 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-            type="button"
+            classes="!ml-0 !mt-0 !px-3 !py-1 text-sm border"
           >
             Close
-          </button>
+          </CustomButton>
         </div>
 
         {pokemon ? (

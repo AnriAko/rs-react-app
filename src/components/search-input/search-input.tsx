@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import { TEST_IDS } from '@constants/test-ids';
-import { StringNullable } from '@common-types/string-nullable';
+import { StringNullable } from 'types/string-nullable';
 import { CustomTextInput } from '@ui/custom-text-input';
 import { CustomButton } from '@ui/custom-button';
 

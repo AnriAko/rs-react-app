@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import { router } from '@router/router';
 import { ErrorBoundary } from '@components/error-boundary';
+import { ThemeProvider } from '@context/theme/theme-provider';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -10,7 +11,9 @@ if (rootElement) {
   root.render(
     <StrictMode>
       <ErrorBoundary>
-        <RouterProvider router={router} />
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </ErrorBoundary>
     </StrictMode>
   );
