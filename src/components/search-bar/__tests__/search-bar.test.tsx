@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { SearchBar } from '@components/search-bar/search-bar';
 import { getPokemons } from '@api/pokemon-api/pokemon-service';
 import { TEST_IDS } from '@constants/test-ids';
+import { ThemeProvider } from '@context/theme/theme-provider';
 
 const setValueMock = vi.fn();
 const getValueMock = vi.fn(() => '');
@@ -50,17 +51,22 @@ describe('SearchBar additional tests', () => {
     getValueMock.mockReturnValue('');
   });
 
-  const renderWithRouter = (initialEntries: string[] = ['/']) =>
+  const renderWithRouter = (
+    initialEntries: string[] = ['/'],
+    theme: 'light' | 'dark' = 'light'
+  ) =>
     render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={initialEntries}>
+          <SearchBar
+            setSearchResult={setSearchResultMock}
+            onLoadingChange={onLoadingChangeMock}
+            onError={onErrorMock}
+            theme={theme}
+          />
+        </MemoryRouter>
+      </ThemeProvider>
     );
-
   test('initializes from URL query params and fetches', async () => {
     const url = '?limit=10&page=2';
     getValueMock.mockReturnValue('');

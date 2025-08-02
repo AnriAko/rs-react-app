@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import { SearchInput } from '@components/search-input/search-input';
 import { TEST_IDS } from '@constants/test-ids';
+import { ThemeProvider } from '@context/theme/theme-provider';
 
 describe('SearchInput', () => {
   const fetchMock = vi.fn();
@@ -15,20 +16,28 @@ describe('SearchInput', () => {
     prevUrl: 'prev-url',
     nextUrl: 'next-url',
     fetchFromFullUrl: fetchMock,
+    theme: 'light',
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+  const renderWithTheme = (props = {}) =>
+    render(
+      <ThemeProvider>
+        <SearchInput {...defaultProps} {...props} />
+      </ThemeProvider>
+    );
+
   test('init values shown', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toHaveValue('20');
     expect(screen.getByTestId(TEST_IDS.search.inputPage)).toHaveValue('1');
   });
 
   test('limit change triggers setRequest', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     fireEvent.change(screen.getByTestId(TEST_IDS.search.inputLimit), {
       target: { value: '5' },
     });
@@ -36,7 +45,7 @@ describe('SearchInput', () => {
   });
 
   test('invalid limit ignored', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     fireEvent.change(screen.getByTestId(TEST_IDS.search.inputLimit), {
       target: { value: 'abc' },
     });
@@ -44,7 +53,7 @@ describe('SearchInput', () => {
   });
 
   test('page change triggers setRequest', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     fireEvent.change(screen.getByTestId(TEST_IDS.search.inputPage), {
       target: { value: '3' },
     });
@@ -52,7 +61,7 @@ describe('SearchInput', () => {
   });
 
   test('invalid page ignored', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     fireEvent.change(screen.getByTestId(TEST_IDS.search.inputPage), {
       target: { value: '-1' },
     });
@@ -60,34 +69,46 @@ describe('SearchInput', () => {
   });
 
   test('prev button works', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     fireEvent.click(screen.getByTestId(TEST_IDS.search.btnPrev));
     expect(fetchMock).toHaveBeenCalledWith('prev-url');
   });
 
   test('prev button disabled', () => {
     const { rerender } = render(
-      <SearchInput {...defaultProps} prevUrl={null} />
+      <ThemeProvider>
+        <SearchInput {...defaultProps} prevUrl={null} />
+      </ThemeProvider>
     );
     expect(screen.getByTestId(TEST_IDS.search.btnPrev)).toBeDisabled();
 
-    rerender(<SearchInput {...defaultProps} isLoading />);
+    rerender(
+      <ThemeProvider>
+        <SearchInput {...defaultProps} isLoading />
+      </ThemeProvider>
+    );
     expect(screen.getByTestId(TEST_IDS.search.btnPrev)).toBeDisabled();
   });
 
   test('next button works', () => {
-    render(<SearchInput {...defaultProps} />);
+    renderWithTheme();
     fireEvent.click(screen.getByTestId(TEST_IDS.search.btnNext));
     expect(fetchMock).toHaveBeenCalledWith('next-url');
   });
 
   test('next button disabled', () => {
     const { rerender } = render(
-      <SearchInput {...defaultProps} nextUrl={null} />
+      <ThemeProvider>
+        <SearchInput {...defaultProps} nextUrl={null} />
+      </ThemeProvider>
     );
     expect(screen.getByTestId(TEST_IDS.search.btnNext)).toBeDisabled();
 
-    rerender(<SearchInput {...defaultProps} isLoading />);
+    rerender(
+      <ThemeProvider>
+        <SearchInput {...defaultProps} isLoading />
+      </ThemeProvider>
+    );
     expect(screen.getByTestId(TEST_IDS.search.btnNext)).toBeDisabled();
   });
 });

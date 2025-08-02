@@ -48,6 +48,7 @@ export const PokemonDetailsCard = () => {
   return (
     <LoadingWrapper loading={isLoading}>
       <div
+        data-testid={TEST_IDS.pokemonDetails.wrapper}
         className={cl('mt-5 w-full rounded-xl border-4 p-4', {
           'bg-white border-gray-200 text-gray-900': theme === 'light',
           'bg-gray-900 border-gray-800 text-white': theme === 'dark',

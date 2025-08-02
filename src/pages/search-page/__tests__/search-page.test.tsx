@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { SearchPage } from '@pages/search-page/search-page';
+import { ThemeProvider } from '@context/theme/theme-provider';
 
 type Pokemon = {
   name: string;
@@ -54,9 +55,11 @@ vi.mock('@components/pokemon-list', () => ({
 describe('SearchPage', () => {
   beforeEach(() => {
     render(
-      <MemoryRouter>
-        <SearchPage />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </ThemeProvider>
     );
   });
 
