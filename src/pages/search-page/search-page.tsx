@@ -1,10 +1,9 @@
 import { useState, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { SearchBar } from '@components/search-bar';
 import { PokemonList } from '@components/pokemon-list';
 import { PokemonDetailsCard } from '@components/pokemon-details-card';
 import type { Pokemon } from '@api/pokemon-api/types/pokemon';
-import { ROUTES_PATH } from '@router/routes-path';
 import { LoadingWrapper } from '@hoc/loading-wrapper';
 
 export const SearchPage = () => {
@@ -13,7 +12,6 @@ export const SearchPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const location = useLocation();
-  const navigate = useNavigate();
 
   const params = new URLSearchParams(location.search);
   const hasDetails = params.has('details');
@@ -61,15 +59,6 @@ export const SearchPage = () => {
           )}
         </div>
       </LoadingWrapper>
-
-      <div className="mt-10 flex justify-center">
-        <button
-          onClick={() => navigate(ROUTES_PATH.ABOUT)}
-          className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md"
-        >
-          Go to About Page
-        </button>
-      </div>
     </div>
   );
 };
