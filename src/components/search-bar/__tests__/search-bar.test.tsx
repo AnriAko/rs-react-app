@@ -1,131 +1,136 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from '@testing-library/react';
-import SearchBar from '../search-bar';
-import getPokemons from '../../service/pokemon-service';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import { vi } from 'vitest';
+import { SearchBar } from '@components/search-bar/search-bar';
+import { getPokemons } from '@api/pokemon-api/pokemon-service';
+import { TEST_IDS } from '@constants/test-ids';
 
-vi.mock('../../service/pokemon-service');
+const setValueMock = vi.fn();
+const getValueMock = vi.fn(() => '');
+vi.mock('@hooks/use-local-storage', () => ({
+  useLocalStorage: () => ({
+    getValue: getValueMock,
+    setValue: setValueMock,
+  }),
+}));
 
 const dummyPokemonsResponse = {
   count: 2,
-  next: '',
+  next: '?limit=20&offset=20',
   previous: null,
   results: [
     { name: 'bulbasaur', url: 'url1' },
     { name: 'ivysaur', url: 'url2' },
   ],
 };
+const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
 
-describe('SearchBar component', () => {
+vi.mock('@api/pokemon-api/pokemon-service', () => ({
+  getPokemons: vi.fn(),
+}));
+
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-router')>('react-router');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+describe('SearchBar additional tests', () => {
   const setSearchResultMock = vi.fn();
   const onLoadingChangeMock = vi.fn();
   const onErrorMock = vi.fn();
 
-  const mockedGetPokemons = getPokemons as unknown as vi.Mock;
-
   beforeEach(() => {
     vi.clearAllMocks();
     mockedGetPokemons.mockResolvedValue(dummyPokemonsResponse);
+    getValueMock.mockReturnValue('');
   });
 
-  it('renders input and button', async () => {
-    await act(async () => {
-      render(
+  const renderWithRouter = (initialEntries: string[] = ['/']) =>
+    render(
+      <MemoryRouter initialEntries={initialEntries}>
         <SearchBar
           setSearchResult={setSearchResultMock}
           onLoadingChange={onLoadingChangeMock}
           onError={onErrorMock}
         />
-      );
+      </MemoryRouter>
+    );
+
+  test('initializes from URL query params and fetches', async () => {
+    const url = '?limit=10&page=2';
+    getValueMock.mockReturnValue('');
+    mockedGetPokemons.mockResolvedValueOnce({
+      ...dummyPokemonsResponse,
+      next: '?limit=10&offset=20',
+      previous: '?limit=10&offset=0',
     });
 
-    const input = screen.getByRole('textbox');
-    const button = screen.getByRole('button');
-    expect(input).toBeInTheDocument();
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent(/search/i);
+    await act(async () => {
+      renderWithRouter([`/${url}`]);
+    });
+
+    expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=10&offset=10');
+    expect(setSearchResultMock).toHaveBeenCalledWith(
+      dummyPokemonsResponse.results
+    );
+    expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toHaveValue('10');
+    expect(screen.getByTestId(TEST_IDS.search.inputPage)).toHaveValue('2');
   });
 
-  it('calls getPokemons and setSearchResult on search button click', async () => {
+  test('navigates with updated query params on search click', async () => {
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      renderWithRouter();
     });
 
-    const input = screen.getByRole('textbox');
-    fireEvent.change(input, { target: { value: '?limit=10&offset=0' } });
+    const limitInput = screen.getByTestId(TEST_IDS.search.inputLimit);
+    const pageInput = screen.getByTestId(TEST_IDS.search.inputPage);
 
-    const button = screen.getByRole('button');
+    fireEvent.change(limitInput, { target: { value: '5' } });
+    fireEvent.change(pageInput, { target: { value: '3' } });
+
+    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
     await act(async () => {
       fireEvent.click(button);
     });
 
-    await waitFor(() => {
-      expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=10&offset=0');
-      expect(setSearchResultMock).toHaveBeenCalledWith(dummyPokemonsResponse);
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(true);
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(false);
-      expect(onErrorMock).toHaveBeenCalledWith('');
+    expect(mockNavigate).toHaveBeenCalledWith('?limit=5&page=3', {
+      replace: false,
     });
+    expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=5&offset=10');
   });
 
-  it('shows loading state on button while fetching', async () => {
-    let resolvePromise: (value: typeof dummyPokemonsResponse) => void;
-    const promise = new Promise<typeof dummyPokemonsResponse>((res) => {
-      resolvePromise = res;
+  test('does not fetch if limit and page did not change on search click', async () => {
+    await act(async () => {
+      renderWithRouter();
     });
-    mockedGetPokemons.mockReturnValue(promise);
+
+    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
+    await act(async () => {
+      fireEvent.click(button);
+    });
 
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      fireEvent.click(button);
     });
 
-    const button = screen.getByRole('button');
-    fireEvent.click(button);
-
-    expect(button).toHaveTextContent(/loading/i);
-
-    await act(async () => {
-      resolvePromise(dummyPokemonsResponse);
-    });
-
-    expect(button).toHaveTextContent(/search/i);
+    expect(mockedGetPokemons).toHaveBeenCalledTimes(1);
   });
 
-  it('handles errors and calls onError', async () => {
-    mockedGetPokemons.mockRejectedValue(new Error('Network Error'));
+  test('updates localStorage when URL changes', async () => {
+    await act(async () => {
+      renderWithRouter(['/']);
+    });
+
+    expect(getValueMock).toHaveBeenCalled();
 
     await act(async () => {
-      render(
-        <SearchBar
-          setSearchResult={setSearchResultMock}
-          onLoadingChange={onLoadingChangeMock}
-          onError={onErrorMock}
-        />
-      );
+      renderWithRouter(['/?limit=20&page=1']);
     });
-
-    const button = screen.getByRole('button');
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(onErrorMock).toHaveBeenCalledWith('Network Error');
-      expect(onLoadingChangeMock).toHaveBeenCalledWith(false);
-    });
+    expect(setValueMock).toHaveBeenCalledWith('?limit=20&page=1');
   });
 });

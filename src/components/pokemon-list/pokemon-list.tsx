@@ -1,24 +1,46 @@
-import { Component, type ReactNode } from 'react';
-import PokemonCard from './pokemon-card';
-import type { Pokemon } from '../types/pokemon.dto';
+import { useNavigate, useLocation } from 'react-router';
+import { PokemonCard } from '@components/pokemon-card';
+import type { Pokemon } from '@api/pokemon-api/types/pokemon';
 
-interface PokemonListProps {
+type PokemonListProps = {
   result: Pokemon[];
-}
+};
 
-class PokemonList extends Component<PokemonListProps> {
-  render(): ReactNode {
-    return (
+export const PokemonList = ({ result }: PokemonListProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSelect = (id: string) => {
+    const params = new URLSearchParams(location.search);
+    params.set('details', id);
+    navigate({ search: params.toString() });
+  };
+
+  return (
+    <div className="flex gap-6 mt-6 mb-3" style={{ minHeight: '45vh' }}>
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6"
-        style={{ maxHeight: '45vh', overflowY: 'auto' }}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto"
+        style={{ flex: 1, maxHeight: '45vh' }}
       >
-        {this.props.result.map((p) => (
-          <PokemonCard key={p.name} name={p.name} url={p.url} />
-        ))}
-      </div>
-    );
-  }
-}
+        {result.map((p) => {
+          const idMatch = p.url.match(/\/pokemon\/(\d+)\//);
+          const id = idMatch ? idMatch[1] : null;
 
-export default PokemonList;
+          if (!id) {
+            console.error('Invalid Pokemon URL', p.url);
+            return null;
+          }
+
+          return (
+            <PokemonCard
+              key={p.name}
+              name={p.name}
+              id={id}
+              onSelect={handleSelect}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};

@@ -1,6 +1,6 @@
+import { ErrorBoundary } from '@components/error-boundary/error-boundary';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import ErrorBoundary from '../error-boundary';
 
 describe('ErrorBoundary', () => {
   const ProblemChild = () => {
@@ -37,7 +37,6 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    // Найти вызов, содержащий вашу строку
     const found = consoleErrorSpy.mock.calls.find(
       (call) =>
         call[0] &&
