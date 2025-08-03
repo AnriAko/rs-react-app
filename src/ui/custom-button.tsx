@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { useTheme } from '@context/theme/theme-context';
 
 type Props = {
-  onClick: () => void;
+  onClick?: () => void;
   id?: string;
   dataTestId?: string;
   disabled?: boolean;
@@ -27,7 +27,7 @@ export const CustomButton = ({
   const theme = propTheme || contextTheme || 'light';
 
   const baseClasses =
-    'px-4 ml-5 mt-6 py-2 rounded whitespace-nowrap h-[38px] flex items-center transition font-medium';
+    'px-4 ml-5 mt-6 py-2 rounded whitespace-nowrap h-[38px] flex items-center font-medium';
 
   const themeClasses = {
     light: disabled

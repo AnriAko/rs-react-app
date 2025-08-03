@@ -7,6 +7,7 @@ import { PokemonDetailsCard } from '@components/pokemon-details-card';
 import type { Pokemon } from '@api/pokemon-api/types/pokemon';
 import { LoadingWrapper } from '@hoc/loading-wrapper';
 import { useTheme } from '@context/theme/theme-context';
+import { Flyout } from '@components/flyout/flyout';
 
 export const SearchPage = () => {
   const { theme } = useTheme();
@@ -80,6 +81,7 @@ export const SearchPage = () => {
           )}
         </div>
       </LoadingWrapper>
+      <Flyout />
     </div>
   );
 };

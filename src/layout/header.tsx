@@ -11,7 +11,7 @@ export const Header = () => {
     <header
       className={cl('shadow-md', {
         'bg-gray-900 text-white': theme === 'dark',
-        'bg-gray-100 text-gray-900': theme !== 'dark',
+        'bg-white text-gray-900': theme !== 'dark',
       })}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center border-b-1 border-gray-600 ">
