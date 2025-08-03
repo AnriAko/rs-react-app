@@ -4,7 +4,7 @@ import { clearAll } from '@redux/selected-items-slice';
 import { useTheme } from '@context/theme/theme-context';
 import { CustomButton } from '@ui/custom-button';
 import cl from 'classnames';
-import { CsvDownloadWrapper } from '@hoc/download-csv';
+import { CsvDownloadWrapper } from '@hoc/csv-download-wrapper';
 
 export const Flyout = () => {
   const dispatch = useDispatch();

@@ -1,16 +1,16 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import { TEST_IDS } from '@constants/test-ids';
-import { StringNullable } from 'types/string-nullable';
 import { CustomTextInput } from '@ui/custom-text-input';
 import { CustomButton } from '@ui/custom-button';
+import { NullableString } from 'types/nullable-string';
 
 type SearchInputProps = {
   limit: number;
   page: number;
   setSearchRequest: (limit: number, page: number) => void;
   isLoading: boolean;
-  prevUrl: StringNullable;
-  nextUrl: StringNullable;
+  prevUrl: NullableString;
+  nextUrl: NullableString;
   fetchFromFullUrl: (url: string) => void;
 };
 

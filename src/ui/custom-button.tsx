@@ -8,6 +8,7 @@ type Props = {
   dataTestId?: string;
   disabled?: boolean;
   classes?: string;
+  darkClasses?: string;
   label?: string;
   labelClasses?: string;
   children?: ReactNode;
@@ -19,6 +20,7 @@ export const CustomButton = ({
   dataTestId,
   onClick,
   classes,
+  darkClasses,
   children,
   disabled,
   theme: propTheme,
@@ -27,15 +29,25 @@ export const CustomButton = ({
   const theme = propTheme || contextTheme || 'light';
 
   const baseClasses =
-    'px-4 py-2 rounded whitespace-nowrap h-[38px] flex items-center font-medium';
+    'px-4 py-2 rounded whitespace-nowrap h-[38px] flex items-center justify-center font-medium';
 
   const themeClasses = {
-    light: disabled
-      ? 'bg-gray-300 text-gray-700 cursor-not-allowed opacity-50'
-      : 'bg-blue-600 text-gray-200 hover:bg-blue-700 cursor-pointer',
-    dark: disabled
-      ? 'bg-gray-700 text-gray-300 cursor-not-allowed opacity-50'
-      : 'bg-yellow-300 text-gray-800 hover:bg-yellow-600 cursor-pointer',
+    light: cl(
+      disabled ? 'bg-gray-300 text-gray-700' : 'bg-blue-600 text-gray-200',
+      {
+        ['cursor-not-allowed opacity-50']: disabled,
+        ['hover:bg-blue-700 cursor-pointer']: !disabled,
+      }
+    ),
+    dark: cl(
+      'bg-gray-700 text-gray-300',
+      {
+        ['opacity-50 cursor-not-allowed']: disabled,
+        ['hover:bg-yellow-500 cursor-pointer text-gray-800 bg-yellow-300']:
+          !disabled,
+      },
+      darkClasses
+    ),
   };
 
   return (

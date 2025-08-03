@@ -12,9 +12,9 @@ export const ToggleTheme = () => {
       className="p-2 rounded-full cursor-pointer"
     >
       {isLight ? (
-        <Moon size={20} className="text-blue-400" />
+        <Moon size={24} className="text-blue-400" />
       ) : (
-        <Sun size={20} className="text-yellow-500" />
+        <Sun size={24} className="text-yellow-500" />
       )}
     </button>
   );

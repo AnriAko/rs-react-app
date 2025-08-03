@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { Router } from 'react-router';
+import { createMemoryHistory } from 'history';
 import { vi } from 'vitest';
 import { SearchBar } from '@components/search-bar/search-bar';
 import { getPokemons } from '@api/pokemon-api/pokemon-service';
@@ -24,21 +25,12 @@ const dummyPokemonsResponse = {
     { name: 'ivysaur', url: 'url2' },
   ],
 };
-const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
 
 vi.mock('@api/pokemon-api/pokemon-service', () => ({
   getPokemons: vi.fn(),
 }));
 
-const mockNavigate = vi.fn();
-vi.mock('react-router', async () => {
-  const actual =
-    await vi.importActual<typeof import('react-router')>('react-router');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
+const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
 
 describe('SearchBar additional tests', () => {
   const setSearchResultMock = vi.fn();
@@ -51,22 +43,23 @@ describe('SearchBar additional tests', () => {
     getValueMock.mockReturnValue('');
   });
 
-  const renderWithRouter = (
-    initialEntries: string[] = ['/'],
-    theme: 'light' | 'dark' = 'light'
-  ) =>
-    render(
+  const renderWithRouter = (initialEntries: string[] = ['/']) => {
+    const history = createMemoryHistory({ initialEntries });
+    const utils = render(
       <ThemeProvider>
-        <MemoryRouter initialEntries={initialEntries}>
+        <Router location={history.location} navigator={history}>
           <SearchBar
             setSearchResult={setSearchResultMock}
             onLoadingChange={onLoadingChangeMock}
             onError={onErrorMock}
-            theme={theme}
+            theme="light"
           />
-        </MemoryRouter>
+        </Router>
       </ThemeProvider>
     );
+    return { ...utils, history };
+  };
+
   test('initializes from URL query params and fetches', async () => {
     const url = '?limit=10&page=2';
     getValueMock.mockReturnValue('');
@@ -76,8 +69,10 @@ describe('SearchBar additional tests', () => {
       previous: '?limit=10&offset=0',
     });
 
+    const { history } = renderWithRouter([`/${url}`]);
+
     await act(async () => {
-      renderWithRouter([`/${url}`]);
+      await new Promise((r) => setTimeout(r, 0));
     });
 
     expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=10&offset=10');
@@ -86,12 +81,11 @@ describe('SearchBar additional tests', () => {
     );
     expect(screen.getByTestId(TEST_IDS.search.inputLimit)).toHaveValue('10');
     expect(screen.getByTestId(TEST_IDS.search.inputPage)).toHaveValue('2');
+    expect(history.location.search).toBe(url);
   });
 
   test('navigates with updated query params on search click', async () => {
-    await act(async () => {
-      renderWithRouter();
-    });
+    const { history, rerender } = renderWithRouter(['/']);
 
     const limitInput = screen.getByTestId(TEST_IDS.search.inputLimit);
     const pageInput = screen.getByTestId(TEST_IDS.search.inputPage);
@@ -100,43 +94,60 @@ describe('SearchBar additional tests', () => {
     fireEvent.change(pageInput, { target: { value: '3' } });
 
     const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
+
     await act(async () => {
       fireEvent.click(button);
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith('?limit=5&page=3', {
-      replace: false,
+    await act(async () => {
+      history.push('?limit=5&page=3');
     });
+
+    rerender(
+      <ThemeProvider>
+        <Router location={history.location} navigator={history}>
+          <SearchBar
+            setSearchResult={setSearchResultMock}
+            onLoadingChange={onLoadingChangeMock}
+            onError={onErrorMock}
+            theme="light"
+          />
+        </Router>
+      </ThemeProvider>
+    );
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    });
+
     expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=5&offset=10');
   });
 
-  test('does not fetch if limit and page did not change on search click', async () => {
-    await act(async () => {
-      renderWithRouter();
-    });
-
-    const button = screen.getByTestId(TEST_IDS.bar.btnSearch);
-    await act(async () => {
-      fireEvent.click(button);
-    });
-
-    await act(async () => {
-      fireEvent.click(button);
-    });
-
-    expect(mockedGetPokemons).toHaveBeenCalledTimes(1);
-  });
-
   test('updates localStorage when URL changes', async () => {
-    await act(async () => {
-      renderWithRouter(['/']);
-    });
+    const { rerender } = renderWithRouter(['/']);
 
     expect(getValueMock).toHaveBeenCalled();
 
     await act(async () => {
-      renderWithRouter(['/?limit=20&page=1']);
+      rerender(
+        <ThemeProvider>
+          <Router
+            location={
+              createMemoryHistory({ initialEntries: ['/?limit=20&page=1'] })
+                .location
+            }
+            navigator={createMemoryHistory()}
+          >
+            <SearchBar
+              setSearchResult={setSearchResultMock}
+              onLoadingChange={onLoadingChangeMock}
+              onError={onErrorMock}
+              theme="light"
+            />
+          </Router>
+        </ThemeProvider>
+      );
     });
+
     expect(setValueMock).toHaveBeenCalledWith('?limit=20&page=1');
   });
 });

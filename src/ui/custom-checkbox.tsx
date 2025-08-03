@@ -6,12 +6,12 @@ type Props = {
   dataTestId?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
-  disabled?: boolean;
   label?: string;
   labelClasses?: string;
   wrapperClasses?: string;
   theme?: 'light' | 'dark';
   stopPropagation?: boolean;
+  darkClasses?: string;
 };
 
 export const CustomCheckbox = ({
@@ -19,30 +19,32 @@ export const CustomCheckbox = ({
   dataTestId,
   checked,
   onChange,
-  disabled,
   label,
   labelClasses,
   wrapperClasses,
   theme: propTheme,
   stopPropagation = false,
+  darkClasses,
 }: Props) => {
   const { theme: contextTheme } = useTheme();
   const theme = propTheme || contextTheme || 'light';
 
   const baseStyles =
-    'w-5 h-5 rounded border-1 flex items-center justify-center shrink-0';
+    'w-5 h-5 rounded border-1 flex items-center justify-center shrink-0 cursor-pointer';
 
   const themeStyles = {
-    light: disabled
-      ? 'border-gray-300 bg-gray-200 cursor-not-allowed'
-      : checked
-        ? 'bg-blue-600 border-blue-600 hover:bg-blue-700 cursor-pointer'
-        : 'bg-white border-gray-400 hover:border-blue-500 cursor-pointer',
-    dark: disabled
-      ? 'border-gray-600 bg-gray-700 cursor-not-allowed'
-      : checked
-        ? 'bg-yellow-300 border-yellow-300 hover:bg-yellow-400 cursor-pointer'
-        : 'bg-gray-800 border-gray-500 hover:border-yellow-400 cursor-pointer',
+    light: cl({
+      ['bg-blue-600 border-blue-600 hover:bg-blue-700']: checked,
+      ['bg-white border-gray-400 hover:border-blue-500']: !checked,
+    }),
+    dark: cl(
+      'border-gray-600 bg-gray-700',
+      {
+        ['bg-yellow-300 border-yellow-300 hover:bg-yellow-400']: checked,
+        ['bg-gray-800 border-gray-500 hover:border-yellow-400']: !checked,
+      },
+      darkClasses
+    ),
   };
 
   const checkMark = (
@@ -59,7 +61,7 @@ export const CustomCheckbox = ({
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (stopPropagation) e.stopPropagation();
-    if (!disabled) onChange(!checked);
+    onChange(!checked);
   };
 
   return (
@@ -77,7 +79,6 @@ export const CustomCheckbox = ({
         onClick={handleClick}
         role="checkbox"
         aria-checked={checked}
-        aria-disabled={disabled}
       >
         {checked && checkMark}
       </div>

@@ -1,4 +1,4 @@
-import { ErrorBoundary } from '@components/error-boundary/error-boundary';
+import { ErrorBoundary } from '@components/error-boundary';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 

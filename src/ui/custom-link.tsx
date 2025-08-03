@@ -18,15 +18,20 @@ export const CustomLink = ({
 }: CustomLinkProps) => {
   const { theme } = useTheme();
 
-  const themeClass =
-    theme === 'dark'
-      ? 'text-white hover:text-yellow-300'
-      : 'text-gray-900 hover:text-blue-500';
-
-  const darkExtraClass = theme === 'dark' && darkClassName ? darkClassName : '';
-
   return (
-    <Link to={to} className={cl(themeClass, darkExtraClass, className)}>
+    <Link
+      to={to}
+      className={cl(
+        {
+          ['text-white hover:text-yellow-300']: theme === 'dark',
+          ['text-gray-900 hover:text-blue-500']: theme !== 'dark',
+        },
+        {
+          [darkClassName ?? '']: theme === 'dark' && !!darkClassName,
+        },
+        className
+      )}
+    >
       {children}
     </Link>
   );
