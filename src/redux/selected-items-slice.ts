@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 type SelectedItem = {
   id: string;
   name: string;
-  description: string;
   url: string;
 };
 

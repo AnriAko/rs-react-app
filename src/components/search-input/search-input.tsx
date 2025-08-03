@@ -68,6 +68,7 @@ export const SearchInput = ({
           onClick={() => prevUrl && fetchFromFullUrl(prevUrl)}
           disabled={!prevUrl || isLoading}
           dataTestId={TEST_IDS.search.btnPrev}
+          classes="mt-6"
         >
           Prev
         </CustomButton>
@@ -86,6 +87,7 @@ export const SearchInput = ({
           onClick={() => nextUrl && fetchFromFullUrl(nextUrl)}
           disabled={!nextUrl || isLoading}
           dataTestId={TEST_IDS.search.btnNext}
+          classes="mt-6"
         >
           Next
         </CustomButton>

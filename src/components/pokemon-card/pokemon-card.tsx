@@ -23,7 +23,6 @@ export const PokemonCard = ({ name, id, theme, onSelect }: Props) => {
       toggleItem({
         id,
         name,
-        description: `Pokemon ${name}`,
         url: `https://pokeapi.co/api/v2/pokemon/${id}`,
       })
     );
@@ -41,7 +40,6 @@ export const PokemonCard = ({ name, id, theme, onSelect }: Props) => {
         checked={isSelected}
         onChange={handleToggle}
         theme={theme}
-        dataTestId={`checkbox-${id}`}
         stopPropagation={true}
       />
 

@@ -1,5 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+
 import { ROUTES_PATH } from '../routes-path';
 import { ThemeProvider } from '@context/theme/theme-provider';
 import { MainLayout } from 'layout/main-layout';
@@ -7,10 +10,13 @@ import { SearchPage } from '@pages/search-page';
 import { PokemonDetailsCard } from '@components/pokemon-details-card';
 import { AboutPage } from '@pages/about-page';
 import { NotFoundPage } from '@pages/not-found-page';
+
 import { vi } from 'vitest';
 import { getPokemonDetails } from '@api/pokemon-api/pokemon-service';
 import type { Mock } from 'vitest';
 import { TEST_IDS } from '@constants/test-ids';
+
+import { selectedItemsReducer } from '@redux/selected-items-slice';
 
 const mockPokemon = {
   id: 1,
@@ -33,8 +39,21 @@ vi.mock('@api/pokemon-api/pokemon-service', () => ({
 }));
 
 describe('App Router', () => {
+  let store: ReturnType<typeof configureStore>;
+
   beforeEach(() => {
     (getPokemonDetails as Mock).mockReset();
+
+    store = configureStore({
+      reducer: {
+        selectedItems: selectedItemsReducer,
+      },
+      preloadedState: {
+        selectedItems: {
+          items: {},
+        },
+      },
+    });
   });
 
   function renderAt(path: string) {
@@ -45,7 +64,7 @@ describe('App Router', () => {
           element: <MainLayout />,
           children: [
             { index: true, element: <SearchPage /> },
-            { path: 'details', element: <PokemonDetailsCard /> }, // <-- вот тут фикс
+            { path: 'details', element: <PokemonDetailsCard /> },
             { path: ROUTES_PATH.ABOUT, element: <AboutPage /> },
           ],
         },
@@ -57,9 +76,11 @@ describe('App Router', () => {
     );
 
     return render(
-      <ThemeProvider>
-        <RouterProvider router={memoryRouter} />
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <RouterProvider router={memoryRouter} />
+        </ThemeProvider>
+      </Provider>
     );
   }
 

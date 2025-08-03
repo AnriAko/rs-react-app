@@ -1,23 +1,28 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import { SearchPage } from '@pages/search-page/search-page';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { ThemeProvider } from '@context/theme/theme-provider';
+import { SearchPage } from '@pages/search-page/search-page';
+import { selectedItemsReducer } from '@redux/selected-items-slice';
 
-type Pokemon = {
+interface Pokemon {
+  id: string;
   name: string;
   url: string;
-};
+}
 
-type SearchBarProps = {
+interface SearchBarProps {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange: (loading: boolean) => void;
   onError: (msg: string) => void;
-};
+  theme: 'light' | 'dark';
+}
 
-type PokemonListProps = {
+interface PokemonListProps {
   result: Pokemon[];
-};
+  theme: 'light' | 'dark';
+}
 
 vi.mock('@components/search-bar', () => ({
   SearchBar: (props: SearchBarProps) => (
@@ -25,7 +30,7 @@ vi.mock('@components/search-bar', () => ({
       <button
         data-testid="setSearchResult-btn"
         onClick={() =>
-          props.setSearchResult([{ name: 'pikachu', url: 'url1' }])
+          props.setSearchResult([{ name: 'pikachu', url: 'url1', id: '1' }])
         }
       >
         Set Search Result
@@ -53,13 +58,28 @@ vi.mock('@components/pokemon-list', () => ({
 }));
 
 describe('SearchPage', () => {
+  let store: ReturnType<typeof configureStore>;
+
   beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        selectedItems: selectedItemsReducer,
+      },
+      preloadedState: {
+        selectedItems: {
+          items: {},
+        },
+      },
+    });
+
     render(
-      <ThemeProvider>
-        <MemoryRouter>
-          <SearchPage />
-        </MemoryRouter>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <MemoryRouter>
+            <SearchPage />
+          </MemoryRouter>
+        </ThemeProvider>
+      </Provider>
     );
   });
 

@@ -23,7 +23,7 @@ export const Flyout = () => {
   return (
     <div
       className={cl(
-        'fixed bottom-0 left-0 w-full flex justify-between items-center px-6 py-4 shadow-md z-50 border-t-1',
+        'fixed bottom-0 left-0 w-full flex justify-between items-center px-6 py-4 shadow-md z-50 border-t',
         {
           'bg-gray-100 text-black': theme === 'light',
           'bg-gray-900 text-white': theme === 'dark',
@@ -35,7 +35,7 @@ export const Flyout = () => {
         selected
       </span>
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-center">
         <CustomButton onClick={handleClear} theme={theme}>
           Unselect all
         </CustomButton>
