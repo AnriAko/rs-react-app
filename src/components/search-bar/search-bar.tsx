@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import cl from 'classnames';
-import { SearchInput } from '@components/search-input';
-import type { Pokemon } from '@api/pokemon-api/types/pokemon';
-import { getPokemons } from '@api/pokemon-api/pokemon-service';
-import { useLocalStorage } from '@hooks/use-local-storage';
-import { TEST_IDS } from '@constants/test-ids';
-import { CustomButton } from '@ui/custom-button';
-import { NullableString } from 'types/nullable-string';
-import { parsePaginationParams } from '@utils/parse-pagination-params-from-url';
-import { parseOffsetPaginationParams } from '@utils/parse-offset-pagination-params';
-import { buildPaginationQuery } from '@utils/building-pagination-query';
+import { SearchInput } from '~components/search-input';
+import type { Pokemon } from '~api/pokemon-api/types/pokemon';
+import { getPokemons } from '~api/pokemon-api/pokemon-service';
+import { useLocalStorage } from '~hooks/use-local-storage';
+import { TEST_IDS } from '~constants/test-ids';
+import { CustomButton } from '~ui/custom-button';
+import { NullableString } from '~types/nullable-string';
+import { parsePaginationParams } from '~utils/parse-pagination-params-from-url';
+import { parseOffsetPaginationParams } from '~utils/parse-offset-pagination-params';
+import { buildPaginationQuery } from '~utils/building-pagination-query';
 
 type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;

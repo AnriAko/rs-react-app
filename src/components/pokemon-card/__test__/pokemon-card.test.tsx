@@ -5,11 +5,11 @@ import {
   cleanup,
   within,
 } from '@testing-library/react';
-import { PokemonCard } from '@components/pokemon-card/pokemon-card';
+import { PokemonCard } from '~components/pokemon-card/pokemon-card';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { selectedItemsReducer, toggleItem } from '@redux/selected-items-slice';
-import { ThemeProvider } from '@context/theme/theme-provider';
+import { selectedItemsReducer, toggleItem } from '~redux/selected-items-slice';
+import { ThemeProvider } from '~context/theme/theme-provider';
 import { vi } from 'vitest';
 
 describe('PokemonCard', () => {

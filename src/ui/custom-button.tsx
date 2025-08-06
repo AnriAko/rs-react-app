@@ -1,6 +1,6 @@
 import cl from 'classnames';
 import { ReactNode } from 'react';
-import { useTheme } from '@context/theme/theme-context';
+import { useTheme } from '~context/theme/theme-context';
 
 type Props = {
   onClick?: () => void;

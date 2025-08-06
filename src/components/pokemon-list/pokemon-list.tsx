@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router';
-import { PokemonCard } from '@components/pokemon-card';
-import type { Pokemon } from '@api/pokemon-api/types/pokemon';
+import { PokemonCard } from '~components/pokemon-card';
+import type { Pokemon } from '~api/pokemon-api/types/pokemon';
 import cl from 'classnames';
 import './pokemon-list.styles.css';
 

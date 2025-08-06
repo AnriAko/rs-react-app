@@ -1,7 +1,7 @@
-import { ROUTES_PATH } from '@router/routes-path';
+import { ROUTES_PATH } from '~router/routes-path';
 import { useNavigate } from 'react-router';
-import { useTheme } from '@context/theme/theme-context';
-import { CustomButton } from '@ui/custom-button';
+import { useTheme } from '~context/theme/theme-context';
+import { CustomButton } from '~ui/custom-button';
 import cl from 'classnames';
 
 export const NotFoundPage = () => {

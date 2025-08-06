@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useLocation } from 'react-router';
 import cl from 'classnames';
-import { SearchBar } from '@components/search-bar';
-import { PokemonList } from '@components/pokemon-list';
-import { PokemonDetailsCard } from '@components/pokemon-details-card';
-import type { Pokemon } from '@api/pokemon-api/types/pokemon';
-import { LoadingWrapper } from '@hoc/loading-wrapper';
-import { useTheme } from '@context/theme/theme-context';
-import { Flyout } from '@components/flyout';
+import { SearchBar } from '~components/search-bar';
+import { PokemonList } from '~components/pokemon-list';
+import { PokemonDetailsCard } from '~components/pokemon-details-card';
+import type { Pokemon } from '~api/pokemon-api/types/pokemon';
+import { LoadingWrapper } from '~hoc/loading-wrapper';
+import { useTheme } from '~context/theme/theme-context';
+import { Flyout } from '~components/flyout';
 
 export const SearchPage = () => {
   const { theme } = useTheme();
