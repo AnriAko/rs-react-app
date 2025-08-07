@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Loader } from '~ui/loader';
+import { Loader } from '~/ui/loader';
 
 type Props = {
   loading: boolean;

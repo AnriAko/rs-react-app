@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '~redux/store';
-import { clearAll } from '~redux/selected-items-slice';
-import { useTheme } from '~context/theme/theme-context';
-import { CustomButton } from '~ui/custom-button';
+import { RootState } from '~/redux/store';
+import { clearAll } from '~/redux/selected-items-slice';
+import { useTheme } from '~/context/theme/theme-context';
+import { CustomButton } from '~/ui/custom-button';
 import cl from 'classnames';
-import { CsvDownloadWrapper } from '~hoc/csv-download-wrapper';
+import { CsvDownloadWrapper } from '~/hoc/csv-download-wrapper';
 
 export const Flyout = () => {
   const dispatch = useDispatch();

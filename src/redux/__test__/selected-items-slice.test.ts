@@ -2,7 +2,7 @@ import {
   selectedItemsReducer,
   toggleItem,
   clearAll,
-} from '~redux/selected-items-slice';
+} from '~/redux/selected-items-slice';
 
 type SelectedItem = {
   id: string;

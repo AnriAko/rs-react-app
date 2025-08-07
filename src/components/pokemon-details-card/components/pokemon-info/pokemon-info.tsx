@@ -1,4 +1,4 @@
-import type { PokemonDetails } from '~api/pokemon-api/types/pokemon-details';
+import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
 
 type Props = {
   pokemon: PokemonDetails;

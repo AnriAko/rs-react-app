@@ -1,11 +1,11 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import * as axiosModule from '../../axios';
-import type { GetPokemons } from '~api/pokemon-api/types/pokemon';
+import type { GetPokemons } from '~/api/pokemon-api/types/pokemon';
 import {
   getPokemonDetails,
   getPokemons,
-} from '~api/pokemon-api/pokemon-service';
-import { PokemonDetails } from '~api/pokemon-api/types/pokemon-details';
+} from '~/api/pokemon-api/pokemon-service';
+import { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
 
 vi.mock('../../axios', () => ({
   api: {

@@ -1,8 +1,8 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
-import { TEST_IDS } from '~constants/test-ids';
-import { CustomTextInput } from '~ui/custom-text-input';
-import { CustomButton } from '~ui/custom-button';
-import { NullableString } from '~types/nullable-string';
+import { TEST_IDS } from '~/constants/test-ids';
+import { CustomTextInput } from '~/ui/custom-text-input';
+import { CustomButton } from '~/ui/custom-button';
+import { NullableString } from '~/types/nullable-string';
 
 type SearchInputProps = {
   limit: number;

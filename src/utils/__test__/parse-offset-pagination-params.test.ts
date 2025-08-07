@@ -1,4 +1,4 @@
-import { parseOffsetPaginationParams } from '~utils/parse-offset-pagination-params';
+import { parseOffsetPaginationParams } from '~/utils/parse-offset-pagination-params';
 
 describe('parseOffsetPaginationParams', () => {
   const defaultLimit = 20;

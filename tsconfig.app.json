@@ -1,21 +1,9 @@
 {
   "compilerOptions": {
     /*Aliases */
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "~api/*": ["api/*"],
-      "~components/*": ["components/*"],
-      "~pages/*": ["pages/*"],
-      "~hooks/*": ["hooks/*"],
-      "~redux/*": ["redux/*"],
-      "~ui/*": ["ui/*"],
-      "~assets/*": ["assets/*"],
-      "~router/*": ["router/*"],
-      "~constants/*": ["constants/*"],
-      "~types/*": ["types/*"],
-      "~hoc/*": ["hoc/*"],
-      "~context/*": ["context/*"],
-      "~utils/*": ["utils/*"]
+      "~/*": ["./src/*"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",

@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import { SearchInput } from '~components/search-input/search-input';
-import { TEST_IDS } from '~constants/test-ids';
-import { ThemeProvider } from '~context/theme/theme-provider';
+import { SearchInput } from '~/components/search-input/search-input';
+import { TEST_IDS } from '~/constants/test-ids';
+import { ThemeProvider } from '~/context/theme/theme-provider';
 
 describe('SearchInput', () => {
   const fetchMock = vi.fn();

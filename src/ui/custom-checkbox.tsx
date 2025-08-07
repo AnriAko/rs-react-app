@@ -1,5 +1,5 @@
 import cl from 'classnames';
-import { useTheme } from '~context/theme/theme-context';
+import { useTheme } from '~/context/theme/theme-context';
 
 type Props = {
   id?: string;

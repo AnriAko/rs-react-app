@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { getPokemonDetails } from '~api/pokemon-api/pokemon-service';
-import type { PokemonDetails } from '~api/pokemon-api/types/pokemon-details';
-import { TEST_IDS } from '~constants/test-ids';
-import { LoadingWrapper } from '~hoc/loading-wrapper';
-import { PokemonInfo } from '~components/pokemon-details-card/components/pokemon-info/pokemon-info';
-import { useQueryParams } from '~hooks/use-query-params';
-import { CustomButton } from '~ui/custom-button';
-import { useTheme } from '~context/theme/theme-context';
+import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
+import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
+import { TEST_IDS } from '~/constants/test-ids';
+import { LoadingWrapper } from '~/hoc/loading-wrapper';
+import { PokemonInfo } from '~/components/pokemon-details-card/components/pokemon-info/pokemon-info';
+import { useQueryParams } from '~/hooks/use-query-params';
+import { CustomButton } from '~/ui/custom-button';
+import { useTheme } from '~/context/theme/theme-context';
 import cl from 'classnames';
 
 export const PokemonDetailsCard = () => {

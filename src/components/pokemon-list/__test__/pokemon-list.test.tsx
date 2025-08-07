@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { PokemonList } from '~components/pokemon-list/pokemon-list';
-import type { Pokemon } from '~api/pokemon-api/types/pokemon';
+import { PokemonList } from '~/components/pokemon-list/pokemon-list';
+import type { Pokemon } from '~/api/pokemon-api/types/pokemon';
 import * as reactRouter from 'react-router';
 
 vi.mock('@components/pokemon-card', () => ({

@@ -1,8 +1,8 @@
 import cl from 'classnames';
-import { ToggleTheme } from '~components/toggle-theme';
-import { ROUTES_PATH } from '~router/routes-path';
-import { CustomLink } from '~ui/custom-link';
-import { useTheme } from '~context/theme/theme-context';
+import { ToggleTheme } from '~/components/toggle-theme';
+import { ROUTES_PATH } from '~/router/routes-path';
+import { CustomLink } from '~/ui/custom-link';
+import { useTheme } from '~/context/theme/theme-context';
 
 export const Header = () => {
   const { theme } = useTheme();

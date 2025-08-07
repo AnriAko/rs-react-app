@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router';
-import { SearchPage } from '~pages/search-page';
-import { NotFoundPage } from '~pages/not-found-page';
+import { SearchPage } from '~/pages/search-page';
+import { NotFoundPage } from '~/pages/not-found-page';
 import { PokemonDetailsCard } from '../components/pokemon-details-card/pokemon-details-card';
-import { AboutPage } from '~pages/about-page';
+import { AboutPage } from '~/pages/about-page';
 import { ROUTES_PATH } from './routes-path';
 import { MainLayout } from 'layout/main-layout';
 

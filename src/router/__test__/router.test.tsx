@@ -4,19 +4,19 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import { ROUTES_PATH } from '../routes-path';
-import { ThemeProvider } from '~context/theme/theme-provider';
+import { ThemeProvider } from '~/context/theme/theme-provider';
 import { MainLayout } from 'layout/main-layout';
-import { SearchPage } from '~pages/search-page';
-import { PokemonDetailsCard } from '~components/pokemon-details-card';
-import { AboutPage } from '~pages/about-page';
-import { NotFoundPage } from '~pages/not-found-page';
+import { SearchPage } from '~/pages/search-page';
+import { PokemonDetailsCard } from '~/components/pokemon-details-card';
+import { AboutPage } from '~/pages/about-page';
+import { NotFoundPage } from '~/pages/not-found-page';
 
 import { vi } from 'vitest';
-import { getPokemonDetails } from '~api/pokemon-api/pokemon-service';
+import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
 import type { Mock } from 'vitest';
-import { TEST_IDS } from '~constants/test-ids';
+import { TEST_IDS } from '~/constants/test-ids';
 
-import { selectedItemsReducer } from '~redux/selected-items-slice';
+import { selectedItemsReducer } from '~/redux/selected-items-slice';
 
 const mockPokemon = {
   id: 1,

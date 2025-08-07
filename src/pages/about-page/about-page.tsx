@@ -1,4 +1,4 @@
-import { useTheme } from '~context/theme/theme-context';
+import { useTheme } from '~/context/theme/theme-context';
 import cl from 'classnames';
 
 export const AboutPage = () => {

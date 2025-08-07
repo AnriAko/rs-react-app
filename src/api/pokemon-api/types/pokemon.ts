@@ -1,4 +1,4 @@
-import { NullableString } from '~types/nullable-string';
+import { NullableString } from '~/types/nullable-string';
 import { NamedApiResource } from './pokemon-details';
 
 export type GetPokemons = {

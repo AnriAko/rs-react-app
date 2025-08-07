@@ -1,8 +1,8 @@
 import cl from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '~redux/store';
-import { toggleItem } from '~redux/selected-items-slice';
-import { CustomCheckbox } from '~ui/custom-checkbox';
+import { RootState } from '~/redux/store';
+import { toggleItem } from '~/redux/selected-items-slice';
+import { CustomCheckbox } from '~/ui/custom-checkbox';
 
 type Props = {
   name: string;

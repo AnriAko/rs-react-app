@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Flyout } from '~components/flyout';
+import { Flyout } from '~/components/flyout';
 import * as reactRedux from 'react-redux';
 import { vi } from 'vitest';
 
