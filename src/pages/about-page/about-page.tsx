@@ -1,11 +1,16 @@
-import { ROUTES_PATH } from '@router/routes-path';
-import { useNavigate } from 'react-router';
+import { useTheme } from '~/context/theme/theme-context';
+import cl from 'classnames';
 
 export const AboutPage = () => {
-  const navigate = useNavigate();
+  const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white px-6 py-8">
+    <div
+      className={cl('min-h-screen px-6 py-8', {
+        'bg-gray-100 text-gray-900': theme === 'light',
+        'bg-gray-900 text-white': theme === 'dark',
+      })}
+    >
       <h1 className="text-4xl font-bold mb-6 text-center">
         About This Project
       </h1>
@@ -22,7 +27,10 @@ export const AboutPage = () => {
               href="https://github.com/AnriAko"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 underline hover:text-blue-300"
+              className={cl('underline', {
+                'text-blue-600 hover:text-blue-800': theme === 'light',
+                'text-blue-400 hover:text-blue-300': theme === 'dark',
+              })}
             >
               https://github.com/AnriAko
             </a>
@@ -38,7 +46,10 @@ export const AboutPage = () => {
               href="https://rs.school/courses/reactjs"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 underline hover:text-blue-300 flex items-center gap-2"
+              className={cl('underline flex items-center gap-2', {
+                'text-blue-600 hover:text-blue-800': theme === 'light',
+                'text-blue-400 hover:text-blue-300': theme === 'dark',
+              })}
             >
               <img
                 src="rss-logo.svg"
@@ -49,15 +60,6 @@ export const AboutPage = () => {
             </a>
           </div>
         </section>
-
-        <div className="pt-8">
-          <button
-            onClick={() => navigate(ROUTES_PATH.ROOT)}
-            className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Back to Main
-          </button>
-        </div>
       </div>
     </div>
   );

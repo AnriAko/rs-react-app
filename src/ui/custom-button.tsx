@@ -1,12 +1,36 @@
 import cl from 'classnames';
 import { ReactNode } from 'react';
+import { Theme } from '~/context/theme/theme-context';
+
+const baseClasses =
+  'px-4 py-2 rounded whitespace-nowrap h-[38px] flex items-center justify-center font-medium';
+
+const themeClasses = {
+  light: (disabled: boolean) =>
+    cl(disabled ? 'bg-gray-300 text-gray-700' : 'bg-blue-600 text-gray-200', {
+      ['cursor-not-allowed opacity-50']: disabled,
+      ['hover:bg-blue-700 cursor-pointer']: !disabled,
+    }),
+  dark: (disabled: boolean, darkClasses?: string) =>
+    cl(
+      'bg-gray-700 text-gray-300',
+      {
+        ['opacity-50 cursor-not-allowed']: disabled,
+        ['hover:bg-yellow-500 cursor-pointer text-gray-800 bg-yellow-300']:
+          !disabled,
+      },
+      darkClasses
+    ),
+};
 
 type Props = {
-  onClick: () => void;
+  theme: Theme;
+  onClick?: () => void;
   id?: string;
   dataTestId?: string;
   disabled?: boolean;
   classes?: string;
+  darkClasses?: string;
   label?: string;
   labelClasses?: string;
   children?: ReactNode;
@@ -17,8 +41,10 @@ export const CustomButton = ({
   dataTestId,
   onClick,
   classes,
+  darkClasses,
   children,
   disabled,
+  theme = 'light',
 }: Props) => (
   <button
     id={id}
@@ -26,10 +52,10 @@ export const CustomButton = ({
     onClick={onClick}
     disabled={disabled}
     className={cl(
-      'px-4 ml-5 mt-6 py-2 text-white rounded whitespace-nowrap h-[38px] flex items-center transition',
-      disabled
-        ? 'bg-gray-700 opacity-50 cursor-not-allowed'
-        : 'bg-gray-700 hover:bg-gray-600 cursor-pointer',
+      baseClasses,
+      theme === 'light'
+        ? themeClasses.light(!!disabled)
+        : themeClasses.dark(!!disabled, darkClasses),
       classes
     )}
   >

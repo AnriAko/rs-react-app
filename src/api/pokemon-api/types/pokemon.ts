@@ -1,13 +1,11 @@
-import type { StringNullable } from '../../../common-types/string-nullable';
+import { NullableString } from '~/types/nullable-string';
+import { NamedApiResource } from './pokemon-details';
 
 export type GetPokemons = {
   count: number;
-  next: StringNullable;
-  previous: StringNullable;
+  next: NullableString;
+  previous: NullableString;
   results: Pokemon[];
 };
 
-export type Pokemon = {
-  name: string;
-  url: string;
-};
+export type Pokemon = NamedApiResource;

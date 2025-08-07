@@ -1,12 +1,29 @@
 import cl from 'classnames';
 import type { ChangeEvent } from 'react';
+import { Theme } from '~/context/theme/theme-context';
+
+const inputBaseClasses = {
+  light: cl(
+    'border border-gray-400 bg-white text-gray-900 placeholder-gray-500 focus:ring-blue-600'
+  ),
+  dark: cl(
+    'border border-gray-600 bg-gray-900 text-gray-300 placeholder-gray-400 focus:ring-blue-500 shadow-sm'
+  ),
+};
+
+const labelBaseClasses = {
+  light: cl('text-gray-700'),
+  dark: cl('text-gray-300'),
+};
 
 type Props = {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  theme: Theme;
   id?: string;
   dataTestId?: string;
   classes?: string;
+  darkClasses?: string;
   label?: string;
   labelClasses?: string;
 };
@@ -19,12 +36,14 @@ export const CustomTextInput = ({
   value,
   onChange,
   classes,
+  darkClasses,
+  theme = 'light',
 }: Props) => (
   <div className="flex flex-col w-full">
     {label && (
       <label
         htmlFor={id}
-        className={cl('text-sm text-gray-300 mb-1', labelClasses)}
+        className={cl(labelBaseClasses[theme], labelClasses, 'text-sm mb-1')}
       >
         {label}
       </label>
@@ -35,8 +54,12 @@ export const CustomTextInput = ({
       value={value}
       onChange={onChange}
       className={cl(
-        'px-3 py-2 rounded-md border border-gray-600 bg-gray-900 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full',
-        classes
+        'px-3 py-2 rounded-md focus:outline-none w-full',
+        inputBaseClasses[theme],
+        classes,
+        {
+          [darkClasses ?? '']: theme === 'dark' && !!darkClasses,
+        }
       )}
     />
   </div>

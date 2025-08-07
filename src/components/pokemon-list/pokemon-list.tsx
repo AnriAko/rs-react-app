@@ -1,12 +1,16 @@
 import { useNavigate, useLocation } from 'react-router';
-import { PokemonCard } from '@components/pokemon-card';
-import type { Pokemon } from '@api/pokemon-api/types/pokemon';
+import { PokemonCard } from '~/components/pokemon-card';
+import type { Pokemon } from '~/api/pokemon-api/types/pokemon';
+import cl from 'classnames';
+import './pokemon-list.styles.css';
+import { Theme } from '~/context/theme/theme-context';
 
 type PokemonListProps = {
   result: Pokemon[];
+  theme: Theme;
 };
 
-export const PokemonList = ({ result }: PokemonListProps) => {
+export const PokemonList = ({ result, theme }: PokemonListProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,10 +21,22 @@ export const PokemonList = ({ result }: PokemonListProps) => {
   };
 
   return (
-    <div className="flex gap-6 mt-6 mb-3" style={{ minHeight: '45vh' }}>
+    <div
+      className={cl('flex gap-6 mt-6 mb-3', {
+        'text-gray-900': theme === 'light',
+        'text-white': theme === 'dark',
+      })}
+      style={{ minHeight: '50vh' }}
+    >
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto"
-        style={{ flex: 1, maxHeight: '45vh' }}
+        className={cl(
+          'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto thin-scrollbar',
+          {
+            'bg-white': theme === 'light',
+            'bg-gray-900': theme === 'dark',
+          }
+        )}
+        style={{ flex: 1, maxHeight: '50vh' }}
       >
         {result.map((p) => {
           const idMatch = p.url.match(/\/pokemon\/(\d+)\//);
@@ -37,6 +53,7 @@ export const PokemonList = ({ result }: PokemonListProps) => {
               name={p.name}
               id={id}
               onSelect={handleSelect}
+              theme={theme}
             />
           );
         })}

@@ -1,11 +1,11 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import * as axiosModule from '../../axios';
-import type { GetPokemons } from '@api/pokemon-api/types/pokemon';
+import type { GetPokemons } from '~/api/pokemon-api/types/pokemon';
 import {
   getPokemonDetails,
   getPokemons,
-} from '@api/pokemon-api/pokemon-service';
-import { PokemonDetails } from '@api/pokemon-api/types/pokemon-details';
+} from '~/api/pokemon-api/pokemon-service';
+import { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
 
 vi.mock('../../axios', () => ({
   api: {
@@ -14,6 +14,7 @@ vi.mock('../../axios', () => ({
 }));
 
 const mockedApi = axiosModule.api;
+const mockedGet = mockedApi.get as unknown as ReturnType<typeof vi.fn>;
 
 describe('pokemon-service', () => {
   beforeEach(() => {
@@ -100,5 +101,16 @@ describe('pokemon-service', () => {
     );
 
     await expect(getPokemonDetails('9999')).rejects.toThrow('404 Not Found');
+  });
+  test('getPokemons: returns pokemon list on success', async () => {
+    mockedGet.mockResolvedValueOnce({
+      data: mockData,
+    });
+
+    const result = await getPokemons('?limit=2');
+
+    console.log('Called with:', mockedGet.mock.calls[0][0]);
+    expect(result).toEqual(mockData);
+    expect(mockedGet).toHaveBeenCalledWith('pokemon?limit=2');
   });
 });

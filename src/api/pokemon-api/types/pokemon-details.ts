@@ -1,3 +1,8 @@
+export type NamedApiResource = {
+  name: string;
+  url: string;
+};
+
 export type PokemonDetails = {
   id: number;
   name: string;
@@ -11,19 +16,13 @@ export type PokemonDetails = {
 
 export type PokemonType = {
   slot: number;
-  type: {
-    name: string;
-    url: string;
-  };
+  type: NamedApiResource;
 };
 
 export type Ability = {
   is_hidden: boolean;
   slot: number;
-  ability: {
-    name: string;
-    url: string;
-  };
+  ability: NamedApiResource;
 };
 
 export type Sprites = {

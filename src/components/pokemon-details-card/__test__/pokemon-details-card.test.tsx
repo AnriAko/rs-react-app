@@ -1,14 +1,17 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { PokemonDetailsCard } from '@components/pokemon-details-card/pokemon-details-card';
-import { getPokemonDetails } from '@api/pokemon-api/pokemon-service';
-import type { PokemonDetails } from '@api/pokemon-api/types/pokemon-details';
+import { PokemonDetailsCard } from '~/components/pokemon-details-card';
+import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
+import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
+import { ThemeProvider } from '~/context/theme/theme-provider';
 
-vi.mock('@api/pokemon-api/pokemon-service', () => ({
-  getPokemonDetails: vi.fn(),
-}));
+vi.mock('~/api/pokemon-api/pokemon-service', async () => {
+  return {
+    getPokemonDetails: vi.fn(),
+  };
+});
 
 const mockPokemon: PokemonDetails = {
   id: 1,
@@ -31,13 +34,15 @@ describe('PokemonDetailsCard (uses query param)', () => {
     vi.clearAllMocks();
   });
 
-  function renderWithQuery(search = '?details=1') {
+  function renderWithProviders(search = '?details=1') {
     return render(
-      <MemoryRouter initialEntries={[`/${search}`]}>
-        <Routes>
-          <Route path="/" element={<PokemonDetailsCard />} />
-        </Routes>
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={[`/${search}`]}>
+          <Routes>
+            <Route path="/" element={<PokemonDetailsCard />} />
+          </Routes>
+        </MemoryRouter>
+      </ThemeProvider>
     );
   }
 
@@ -45,7 +50,7 @@ describe('PokemonDetailsCard (uses query param)', () => {
     const mockGet = getPokemonDetails as Mock;
     mockGet.mockResolvedValueOnce(mockPokemon);
 
-    renderWithQuery();
+    renderWithProviders();
 
     expect(screen.getByRole('status')).toBeInTheDocument();
 
@@ -77,7 +82,7 @@ describe('PokemonDetailsCard (uses query param)', () => {
     const mockGet = getPokemonDetails as Mock;
     mockGet.mockRejectedValueOnce(new Error('Not found'));
 
-    renderWithQuery();
+    renderWithProviders();
 
     await waitFor(() => {
       expect(screen.getByText(/pokemon not found/i)).toBeInTheDocument();
@@ -85,7 +90,7 @@ describe('PokemonDetailsCard (uses query param)', () => {
   });
 
   test('does not render if "details" param is missing', () => {
-    renderWithQuery(''); // no ?details param
+    renderWithProviders('');
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
   });
 
@@ -93,7 +98,7 @@ describe('PokemonDetailsCard (uses query param)', () => {
     const mockGet = getPokemonDetails as Mock;
     mockGet.mockResolvedValueOnce(mockPokemon);
 
-    renderWithQuery('?details=1');
+    renderWithProviders('?details=1');
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(

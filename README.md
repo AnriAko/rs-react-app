@@ -70,4 +70,4 @@ npm run format:fix
 
 ---
 
-> ✅ Git pre-commit hook runs `lint`, `format`, and `test:coverage` automatically via Husky.
+> Git pre-commit hook runs `lint`, `format`, and pre-push runs `test:coverage` automatically via Husky.

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { PokemonInfo } from '@components/pokemon-details-card/components/pokemon-info/pokemon-info';
-import type { PokemonDetails } from '@api/pokemon-api/types/pokemon-details';
+import { PokemonInfo } from '~/components/pokemon-details-card/components/pokemon-info/';
+import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
 
 const basePokemon: PokemonDetails = {
   id: 1,

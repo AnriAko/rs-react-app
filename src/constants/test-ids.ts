@@ -10,6 +10,7 @@ export const TEST_IDS = {
     container: 'search-bar',
   },
   pokemonDetails: {
+    wrapper: 'pokemon-details-container',
     loader: 'pokemon-loader',
   },
 };

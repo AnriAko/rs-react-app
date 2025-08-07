@@ -1,8 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { NotFoundPage } from '@pages/not-found-page/not-found-page';
+import { NotFoundPage } from '~/pages/not-found-page/not-found-page';
 import { vi } from 'vitest';
-import { ROUTES_PATH } from '@router/routes-path';
+import { ROUTES_PATH } from '~/router/routes-path';
+import { ThemeProvider } from '~/context/theme/theme-provider';
 
 const mockNavigate = vi.fn();
 
@@ -19,12 +20,17 @@ describe('NotFoundPage', () => {
     mockNavigate.mockClear();
   });
 
-  test('renders 404 message and button', () => {
+  const renderWithProviders = () =>
     render(
       <MemoryRouter>
-        <NotFoundPage />
+        <ThemeProvider>
+          <NotFoundPage />
+        </ThemeProvider>
       </MemoryRouter>
     );
+
+  test('renders 404 message and button', () => {
+    renderWithProviders();
 
     expect(screen.getByText(/404 - Page Not Found/i)).toBeInTheDocument();
     const button = screen.getByRole('button', { name: /go to home/i });
@@ -32,11 +38,7 @@ describe('NotFoundPage', () => {
   });
 
   test('clicking button navigates to home', () => {
-    render(
-      <MemoryRouter>
-        <NotFoundPage />
-      </MemoryRouter>
-    );
+    renderWithProviders();
 
     const button = screen.getByRole('button', { name: /go to home/i });
     fireEvent.click(button);

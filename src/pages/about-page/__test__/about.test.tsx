@@ -1,9 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { AboutPage } from '@pages/about-page/about-page';
+import { AboutPage } from '~/pages/about-page/about-page';
 import { vi } from 'vitest';
 import type * as RRDom from 'react-router';
-import { ROUTES_PATH } from '@router/routes-path';
+import { ThemeProvider } from '~/context/theme/theme-provider';
 
 const mockNavigate = vi.fn();
 
@@ -20,12 +20,17 @@ describe('AboutPage', () => {
     mockNavigate.mockClear();
   });
 
-  test('renders main headings, links and author info', () => {
+  const renderWithProviders = () =>
     render(
-      <MemoryRouter>
-        <AboutPage />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AboutPage />
+        </MemoryRouter>
+      </ThemeProvider>
     );
+
+  test('renders main headings, links and author info', () => {
+    renderWithProviders();
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'About This Project'
@@ -48,18 +53,5 @@ describe('AboutPage', () => {
       'https://rs.school/courses/reactjs'
     );
     expect(rssLink).toHaveAttribute('target', '_blank');
-  });
-
-  test('clicking "Back to Main" button calls navigate with "/"', () => {
-    render(
-      <MemoryRouter>
-        <AboutPage />
-      </MemoryRouter>
-    );
-
-    const button = screen.getByRole('button', { name: /back to main/i });
-    fireEvent.click(button);
-
-    expect(mockNavigate).toHaveBeenCalledWith(ROUTES_PATH.ROOT);
   });
 });
