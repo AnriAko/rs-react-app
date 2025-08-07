@@ -16,8 +16,12 @@ export const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center border-b-1 border-gray-600 ">
         <nav className="flex gap-6 text-lg font-medium">
-          <CustomLink to={ROUTES_PATH.ROOT}>Search</CustomLink>
-          <CustomLink to={ROUTES_PATH.ABOUT}>About</CustomLink>
+          <CustomLink to={ROUTES_PATH.ROOT} theme={theme}>
+            Search
+          </CustomLink>
+          <CustomLink to={ROUTES_PATH.ABOUT} theme={theme}>
+            About
+          </CustomLink>
         </nav>
         <ToggleTheme />
       </div>
