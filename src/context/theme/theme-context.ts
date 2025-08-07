@@ -7,12 +7,15 @@ type ThemeContextType = {
   setTheme: (theme: Theme) => void;
 };
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const defaultTheme: ThemeContextType = {
+  theme: 'light',
+  setTheme: () => {},
+};
+
+const ThemeContext = createContext<ThemeContextType>(defaultTheme);
 
 export const useTheme = (): ThemeContextType => {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error('useTheme must be used within ThemeProvider');
-  return context;
+  return useContext(ThemeContext);
 };
 
 export { ThemeContext, Theme };

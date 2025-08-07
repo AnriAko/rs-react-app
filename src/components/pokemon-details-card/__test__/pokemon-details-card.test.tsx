@@ -7,9 +7,11 @@ import { vi } from 'vitest';
 import type { Mock } from 'vitest';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 
-vi.mock('@api/pokemon-api/pokemon-service', () => ({
-  getPokemonDetails: vi.fn(),
-}));
+vi.mock('~/api/pokemon-api/pokemon-service', async () => {
+  return {
+    getPokemonDetails: vi.fn(),
+  };
+});
 
 const mockPokemon: PokemonDetails = {
   id: 1,
@@ -88,7 +90,7 @@ describe('PokemonDetailsCard (uses query param)', () => {
   });
 
   test('does not render if "details" param is missing', () => {
-    renderWithProviders(''); // no ?details param
+    renderWithProviders('');
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
   });
 

@@ -9,7 +9,7 @@ import { ThemeProvider } from '~/context/theme/theme-provider';
 
 const setValueMock = vi.fn();
 const getValueMock = vi.fn(() => '');
-vi.mock('@hooks/use-local-storage', () => ({
+vi.mock('~/hooks/use-local-storage', () => ({
   useLocalStorage: () => ({
     getValue: getValueMock,
     setValue: setValueMock,
@@ -26,7 +26,7 @@ const dummyPokemonsResponse = {
   ],
 };
 
-vi.mock('@api/pokemon-api/pokemon-service', () => ({
+vi.mock('~/api/pokemon-api/pokemon-service', () => ({
   getPokemons: vi.fn(),
 }));
 

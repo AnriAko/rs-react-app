@@ -8,9 +8,9 @@ import {
 import { PokemonCard } from '~/components/pokemon-card/pokemon-card';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { selectedItemsReducer, toggleItem } from '~/redux/selected-items-slice';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 import { vi } from 'vitest';
+import { selectedPokemonsReducer, togglePokemon } from '~/redux/pokemons/slice';
 
 describe('PokemonCard', () => {
   const mockOnSelect = vi.fn();
@@ -30,11 +30,11 @@ describe('PokemonCard', () => {
 
     store = configureStore({
       reducer: {
-        selectedItems: selectedItemsReducer,
+        selectedPokemons: selectedPokemonsReducer,
       },
       preloadedState: {
-        selectedItems: {
-          items: {},
+        selectedPokemons: {
+          pokemons: {},
         },
       },
     });
@@ -65,12 +65,12 @@ describe('PokemonCard', () => {
     expect(mockOnSelect).toHaveBeenCalledWith('25');
   });
 
-  test('dispatches toggleItem action when checkbox is clicked', () => {
+  test('dispatches togglePokemon action when checkbox is clicked', () => {
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
 
     expect(dispatchSpy).toHaveBeenCalledWith(
-      toggleItem({
+      togglePokemon({
         id: '25',
         name: 'pikachu',
         url: 'https://pokeapi.co/api/v2/pokemon/25',
@@ -101,11 +101,11 @@ describe('PokemonCard with pre-selected item', () => {
 
     store = configureStore({
       reducer: {
-        selectedItems: selectedItemsReducer,
+        selectedPokemons: selectedPokemonsReducer,
       },
       preloadedState: {
-        selectedItems: {
-          items: {
+        selectedPokemons: {
+          pokemons: {
             '25': {
               id: '25',
               name: 'pikachu',

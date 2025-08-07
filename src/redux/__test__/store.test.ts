@@ -1,36 +1,49 @@
-import { store } from '../store';
-import { toggleItem, clearAll } from '../selected-items-slice';
+import { configureStore } from '@reduxjs/toolkit';
+import { togglePokemon, clearAllPokemons } from '~/redux/pokemons/slice';
+import { selectedPokemonsReducer } from '~/redux/pokemons/slice';
 
-describe('Redux store', () => {
+describe('selectedPokemons slice', () => {
+  let store: ReturnType<typeof createTestStore>;
+
+  const createTestStore = () =>
+    configureStore({
+      reducer: {
+        selectedPokemons: selectedPokemonsReducer,
+      },
+    });
+
+  const samplePokemon = {
+    id: '1',
+    name: 'bulbasaur',
+    url: 'https://pokeapi.co/api/v2/pokemon/1/',
+  };
+
   beforeEach(() => {
-    store.dispatch(clearAll());
+    store = createTestStore();
   });
 
   test('initial state should be empty', () => {
     const state = store.getState().selectedPokemons;
-    expect(state.items).toEqual({});
+    expect(state.pokemons).toEqual({});
   });
 
-  test('toggleItem adds an item if not selected', () => {
-    const item = { id: '1', name: 'bulbasaur', url: 'url1' };
-    store.dispatch(toggleItem(item));
+  test('togglePokemon adds a Pokémon if not already selected', () => {
+    store.dispatch(togglePokemon(samplePokemon));
     const state = store.getState().selectedPokemons;
-    expect(state.items[item.id]).toEqual(item);
+    expect(state.pokemons[samplePokemon.id]).toEqual(samplePokemon);
   });
 
-  test('toggleItem removes an item if already selected', () => {
-    const item = { id: '1', name: 'bulbasaur', url: 'url1' };
-    store.dispatch(toggleItem(item));
-    store.dispatch(toggleItem(item));
+  test('togglePokemon removes a Pokémon if already selected', () => {
+    store.dispatch(togglePokemon(samplePokemon));
+    store.dispatch(togglePokemon(samplePokemon));
     const state = store.getState().selectedPokemons;
-    expect(state.items[item.id]).toBeUndefined();
+    expect(state.pokemons[samplePokemon.id]).toBeUndefined();
   });
 
-  test('clearAll empties the items', () => {
-    const item = { id: '1', name: 'bulbasaur', url: 'url1' };
-    store.dispatch(toggleItem(item));
-    store.dispatch(clearAll());
+  test('clearAllPokemons empties the selected list', () => {
+    store.dispatch(togglePokemon(samplePokemon));
+    store.dispatch(clearAllPokemons());
     const state = store.getState().selectedPokemons;
-    expect(state.items).toEqual({});
+    expect(state.pokemons).toEqual({});
   });
 });

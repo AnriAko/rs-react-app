@@ -1,41 +1,46 @@
 import {
-  selectedItemsReducer,
-  toggleItem,
-  clearAll,
-} from '~/redux/selected-items-slice';
-
-type SelectedItem = {
-  id: string;
-  name: string;
-  url: string;
-};
+  clearAllPokemons,
+  SelectedPokemons,
+  selectedPokemonsReducer,
+} from '~/redux/pokemons/slice';
+import { togglePokemon } from '~/redux/pokemons/slice';
 
 describe('selectedItemsSlice reducer', () => {
-  const item1: SelectedItem = { id: '1', name: 'Item 1', url: 'url1' };
-  const item2: SelectedItem = { id: '2', name: 'Item 2', url: 'url2' };
+  const pokemon1: SelectedPokemons = { id: '1', name: 'Pokemon1', url: 'url1' };
+  const pokemon2: SelectedPokemons = { id: '2', name: 'Pokemon1', url: 'url2' };
 
   it('should return the initial state', () => {
-    expect(selectedItemsReducer(undefined, { type: '' })).toEqual({
-      items: {},
+    expect(selectedPokemonsReducer(undefined, { type: '' })).toEqual({
+      pokemons: {},
     });
   });
 
   it('should add item when toggleItem is dispatched for new item', () => {
-    const initialState = { items: {} };
-    const newState = selectedItemsReducer(initialState, toggleItem(item1));
-    expect(newState.items).toHaveProperty(item1.id, item1);
+    const initialState = { pokemons: {} };
+    const newState = selectedPokemonsReducer(
+      initialState,
+      togglePokemon(pokemon1)
+    );
+    expect(newState.pokemons).toHaveProperty(pokemon1.id, pokemon1);
   });
 
   it('should remove item when toggleItem is dispatched for existing item', () => {
-    const initialState = { items: { [item1.id]: item1, [item2.id]: item2 } };
-    const newState = selectedItemsReducer(initialState, toggleItem(item1));
-    expect(newState.items).not.toHaveProperty(item1.id);
-    expect(newState.items).toHaveProperty(item2.id, item2);
+    const initialState = {
+      pokemons: { [pokemon1.id]: pokemon1, [pokemon2.id]: pokemon2 },
+    };
+    const newState = selectedPokemonsReducer(
+      initialState,
+      togglePokemon(pokemon1)
+    );
+    expect(newState.pokemons).not.toHaveProperty(pokemon1.id);
+    expect(newState.pokemons).toHaveProperty(pokemon2.id, pokemon2);
   });
 
   it('should clear all items when clearAll is dispatched', () => {
-    const initialState = { items: { [item1.id]: item1, [item2.id]: item2 } };
-    const newState = selectedItemsReducer(initialState, clearAll());
-    expect(newState.items).toEqual({});
+    const initialState = {
+      pokemons: { [pokemon1.id]: pokemon1, [pokemon2.id]: pokemon2 },
+    };
+    const newState = selectedPokemonsReducer(initialState, clearAllPokemons());
+    expect(newState.pokemons).toEqual({});
   });
 });

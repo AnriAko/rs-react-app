@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { ROUTES_PATH } from '../routes-path';
 import { ThemeProvider } from '~/context/theme/theme-provider';
-import { MainLayout } from 'layout/main-layout';
+import { MainLayout } from '~/layout/main-layout';
 import { SearchPage } from '~/pages/search-page';
 import { PokemonDetailsCard } from '~/components/pokemon-details-card';
 import { AboutPage } from '~/pages/about-page';
@@ -15,8 +15,15 @@ import { vi } from 'vitest';
 import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
 import type { Mock } from 'vitest';
 import { TEST_IDS } from '~/constants/test-ids';
+import { selectedPokemonsReducer } from '~/redux/pokemons/slice';
 
-import { selectedItemsReducer } from '~/redux/selected-items-slice';
+beforeAll(() => {
+  global.URL.createObjectURL = vi.fn(() => 'blob:mock');
+});
+
+afterAll(() => {
+  vi.restoreAllMocks();
+});
 
 const mockPokemon = {
   id: 1,
@@ -34,7 +41,7 @@ const mockPokemon = {
   },
 };
 
-vi.mock('@api/pokemon-api/pokemon-service', () => ({
+vi.mock('~/api/pokemon-api/pokemon-service', () => ({
   getPokemonDetails: vi.fn(),
 }));
 
@@ -46,11 +53,11 @@ describe('App Router', () => {
 
     store = configureStore({
       reducer: {
-        selectedItems: selectedItemsReducer,
+        selectedPokemons: selectedPokemonsReducer,
       },
       preloadedState: {
-        selectedItems: {
-          items: {},
+        selectedPokemons: {
+          pokemons: {},
         },
       },
     });

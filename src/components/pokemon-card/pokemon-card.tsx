@@ -1,13 +1,14 @@
 import cl from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
+import { Theme } from '~/context/theme/theme-context';
+import { togglePokemon } from '~/redux/pokemons/slice';
 import { RootState } from '~/redux/store';
-import { toggleItem } from '~/redux/selected-items-slice';
 import { CustomCheckbox } from '~/ui/custom-checkbox';
 
 type Props = {
   name: string;
   id: string;
-  theme: 'light' | 'dark';
+  theme: Theme;
   onSelect: (id: string) => void;
 };
 
@@ -15,17 +16,21 @@ export const PokemonCard = ({ name, id, theme, onSelect }: Props) => {
   const dispatch = useDispatch();
 
   const isSelected = useSelector(
-    (state: RootState) => !!state.selectedPokemons.items[id]
+    (state: RootState) => !!state.selectedPokemons.pokemons[id]
   );
 
   const handleToggle = () => {
     dispatch(
-      toggleItem({
+      togglePokemon({
         id,
         name,
         url: `https://pokeapi.co/api/v2/pokemon/${id}`,
       })
     );
+  };
+
+  const handleCheckboxClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
   };
 
   return (
@@ -36,12 +41,13 @@ export const PokemonCard = ({ name, id, theme, onSelect }: Props) => {
       })}
       onClick={() => onSelect(id)}
     >
-      <CustomCheckbox
-        checked={isSelected}
-        onChange={handleToggle}
-        theme={theme}
-        stopPropagation={true}
-      />
+      <div onClick={handleCheckboxClick}>
+        <CustomCheckbox
+          checked={isSelected}
+          onChange={handleToggle}
+          theme={theme}
+        />
+      </div>
 
       <h3 className="capitalize font-semibold">
         {name.charAt(0).toUpperCase() + name.slice(1)}

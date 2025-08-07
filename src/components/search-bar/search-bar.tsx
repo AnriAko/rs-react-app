@@ -11,12 +11,13 @@ import { NullableString } from '~/types/nullable-string';
 import { parsePaginationParams } from '~/utils/parse-pagination-params-from-url';
 import { parseOffsetPaginationParams } from '~/utils/parse-offset-pagination-params';
 import { buildPaginationQuery } from '~/utils/building-pagination-query';
+import { Theme } from '~/context/theme/theme-context';
 
 type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange?: (loading: boolean) => void;
   onError?: (message: string) => void;
-  theme: 'light' | 'dark';
+  theme: Theme;
 };
 
 const PREVIOUS_REQUEST = 'previousRequest';
@@ -150,9 +151,11 @@ export const SearchBar = ({
           prevUrl={prevUrl}
           nextUrl={nextUrl}
           fetchFromFullUrl={fetchFromFullUrl}
+          theme={theme}
         />
 
         <CustomButton
+          theme={theme}
           onClick={handleSearchClick}
           disabled={isLoading}
           dataTestId={TEST_IDS.bar.btnSearch}

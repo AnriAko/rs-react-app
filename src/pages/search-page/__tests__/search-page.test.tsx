@@ -4,7 +4,10 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 import { SearchPage } from '~/pages/search-page/search-page';
-import { selectedItemsReducer } from '~/redux/selected-items-slice';
+import { selectedPokemonsReducer } from '~/redux/pokemons/slice';
+import { Theme } from '~/context/theme/theme-context';
+
+global.URL.createObjectURL = vi.fn(() => 'mock-url');
 
 interface Pokemon {
   id: string;
@@ -16,15 +19,15 @@ interface SearchBarProps {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange: (loading: boolean) => void;
   onError: (msg: string) => void;
-  theme: 'light' | 'dark';
+  theme: Theme;
 }
 
 interface PokemonListProps {
   result: Pokemon[];
-  theme: 'light' | 'dark';
+  theme: Theme;
 }
 
-vi.mock('@components/search-bar', () => ({
+vi.mock('~/components/search-bar', () => ({
   SearchBar: (props: SearchBarProps) => (
     <div>
       <button
@@ -51,7 +54,7 @@ vi.mock('@components/search-bar', () => ({
   ),
 }));
 
-vi.mock('@components/pokemon-list', () => ({
+vi.mock('~/components/pokemon-list', () => ({
   PokemonList: (props: PokemonListProps) => (
     <div data-testid="pokemon-list">{JSON.stringify(props.result)}</div>
   ),
@@ -63,11 +66,11 @@ describe('SearchPage', () => {
   beforeEach(() => {
     store = configureStore({
       reducer: {
-        selectedItems: selectedItemsReducer,
+        selectedPokemons: selectedPokemonsReducer,
       },
       preloadedState: {
-        selectedItems: {
-          items: {},
+        selectedPokemons: {
+          pokemons: {},
         },
       },
     });

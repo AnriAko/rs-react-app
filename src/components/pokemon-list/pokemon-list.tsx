@@ -3,10 +3,11 @@ import { PokemonCard } from '~/components/pokemon-card';
 import type { Pokemon } from '~/api/pokemon-api/types/pokemon';
 import cl from 'classnames';
 import './pokemon-list.styles.css';
+import { Theme } from '~/context/theme/theme-context';
 
 type PokemonListProps = {
   result: Pokemon[];
-  theme: 'light' | 'dark';
+  theme: Theme;
 };
 
 export const PokemonList = ({ result, theme }: PokemonListProps) => {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type SelectedPokemons = {
+export type SelectedPokemons = {
   id: string;
   name: string;
   url: string;

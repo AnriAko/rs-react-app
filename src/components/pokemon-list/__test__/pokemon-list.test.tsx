@@ -4,7 +4,7 @@ import { PokemonList } from '~/components/pokemon-list/pokemon-list';
 import type { Pokemon } from '~/api/pokemon-api/types/pokemon';
 import * as reactRouter from 'react-router';
 
-vi.mock('@components/pokemon-card', () => ({
+vi.mock('~/components/pokemon-card', () => ({
   PokemonCard: ({
     name,
     id,
@@ -42,7 +42,7 @@ describe('PokemonList', () => {
   test('renders list of PokemonCard components with correct names', () => {
     render(
       <MemoryRouter>
-        <PokemonList result={pokemons} />
+        <PokemonList result={pokemons} theme="light" />
       </MemoryRouter>
     );
 
@@ -54,7 +54,7 @@ describe('PokemonList', () => {
   test('renders correct number of cards', () => {
     render(
       <MemoryRouter>
-        <PokemonList result={pokemons} />
+        <PokemonList result={pokemons} theme="light" />
       </MemoryRouter>
     );
 
@@ -65,7 +65,7 @@ describe('PokemonList', () => {
   test('calls navigate with correct id on PokemonCard click', () => {
     render(
       <MemoryRouter>
-        <PokemonList result={pokemons} />
+        <PokemonList result={pokemons} theme="light" />
       </MemoryRouter>
     );
 
@@ -89,7 +89,7 @@ describe('PokemonList', () => {
 
     render(
       <MemoryRouter>
-        <PokemonList result={badPokemons} />
+        <PokemonList result={badPokemons} theme="light" />
       </MemoryRouter>
     );
 
