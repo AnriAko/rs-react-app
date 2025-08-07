@@ -15,7 +15,7 @@ const initialState: SelectedPokemonsState = {
 };
 
 const selectedPokemonsSlice = createSlice({
-  name: 'selectedItems',
+  name: 'selectedPokemons',
   initialState,
   reducers: {
     togglePokemon(state, action: PayloadAction<SelectedPokemons>) {
