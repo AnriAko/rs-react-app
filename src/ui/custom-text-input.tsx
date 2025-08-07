@@ -38,31 +38,29 @@ export const CustomTextInput = ({
   classes,
   darkClasses,
   theme = 'light',
-}: Props) => {
-  return (
-    <div className="flex flex-col w-full">
-      {label && (
-        <label
-          htmlFor={id}
-          className={cl(labelBaseClasses[theme], labelClasses, 'text-sm mb-1')}
-        >
-          {label}
-        </label>
+}: Props) => (
+  <div className="flex flex-col w-full">
+    {label && (
+      <label
+        htmlFor={id}
+        className={cl(labelBaseClasses[theme], labelClasses, 'text-sm mb-1')}
+      >
+        {label}
+      </label>
+    )}
+    <input
+      id={id}
+      data-testid={dataTestId}
+      value={value}
+      onChange={onChange}
+      className={cl(
+        'px-3 py-2 rounded-md focus:outline-none w-full',
+        inputBaseClasses[theme],
+        classes,
+        {
+          [darkClasses ?? '']: theme === 'dark' && !!darkClasses,
+        }
       )}
-      <input
-        id={id}
-        data-testid={dataTestId}
-        value={value}
-        onChange={onChange}
-        className={cl(
-          'px-3 py-2 rounded-md focus:outline-none w-full',
-          inputBaseClasses[theme],
-          classes,
-          {
-            [darkClasses ?? '']: theme === 'dark' && !!darkClasses,
-          }
-        )}
-      />
-    </div>
-  );
-};
+    />
+  </div>
+);
