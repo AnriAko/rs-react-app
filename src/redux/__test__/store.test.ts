@@ -7,14 +7,14 @@ describe('Redux store', () => {
   });
 
   test('initial state should be empty', () => {
-    const state = store.getState().selectedItems;
+    const state = store.getState().selectedPokemons;
     expect(state.items).toEqual({});
   });
 
   test('toggleItem adds an item if not selected', () => {
     const item = { id: '1', name: 'bulbasaur', url: 'url1' };
     store.dispatch(toggleItem(item));
-    const state = store.getState().selectedItems;
+    const state = store.getState().selectedPokemons;
     expect(state.items[item.id]).toEqual(item);
   });
 
@@ -22,7 +22,7 @@ describe('Redux store', () => {
     const item = { id: '1', name: 'bulbasaur', url: 'url1' };
     store.dispatch(toggleItem(item));
     store.dispatch(toggleItem(item));
-    const state = store.getState().selectedItems;
+    const state = store.getState().selectedPokemons;
     expect(state.items[item.id]).toBeUndefined();
   });
 
@@ -30,7 +30,7 @@ describe('Redux store', () => {
     const item = { id: '1', name: 'bulbasaur', url: 'url1' };
     store.dispatch(toggleItem(item));
     store.dispatch(clearAll());
-    const state = store.getState().selectedItems;
+    const state = store.getState().selectedPokemons;
     expect(state.items).toEqual({});
   });
 });

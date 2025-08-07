@@ -15,7 +15,7 @@ export const PokemonCard = ({ name, id, theme, onSelect }: Props) => {
   const dispatch = useDispatch();
 
   const isSelected = useSelector(
-    (state: RootState) => !!state.selectedItems.items[id]
+    (state: RootState) => !!state.selectedPokemons.items[id]
   );
 
   const handleToggle = () => {

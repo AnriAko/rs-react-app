@@ -1,23 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '~/redux/store';
-import { clearAll } from '~/redux/selected-items-slice';
 import { useTheme } from '~/context/theme/theme-context';
 import { CustomButton } from '~/ui/custom-button';
 import cl from 'classnames';
 import { CsvDownloadWrapper } from '~/hoc/csv-download-wrapper';
+import { clearAllPokemons } from '~/redux/pokemons/slice';
+import { selectSelectedPokemons } from '~/redux/pokemons/selectors';
 
 export const Flyout = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
 
-  const selectedItems = useSelector((state: RootState) =>
-    Object.values(state.selectedItems.items)
-  );
+  const selectedPokemons = useSelector(selectSelectedPokemons);
 
-  if (selectedItems.length === 0) return null;
+  if (selectedPokemons.length === 0) return null;
 
   const handleClear = () => {
-    dispatch(clearAll());
+    dispatch(clearAllPokemons());
   };
 
   return (
@@ -31,7 +29,7 @@ export const Flyout = () => {
       )}
     >
       <span className="text-sm font-medium">
-        {selectedItems.length} item{selectedItems.length > 1 ? 's' : ''}{' '}
+        {selectedPokemons.length} item{selectedPokemons.length > 1 ? 's' : ''}{' '}
         selected
       </span>
 
@@ -39,7 +37,7 @@ export const Flyout = () => {
         <CustomButton onClick={handleClear} theme={theme}>
           Unselect all
         </CustomButton>
-        <CsvDownloadWrapper data={selectedItems}>
+        <CsvDownloadWrapper data={selectedPokemons}>
           <CustomButton theme={theme}>Download</CustomButton>
         </CsvDownloadWrapper>
       </div>

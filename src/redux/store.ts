@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { selectedItemsReducer } from '~/redux/selected-items-slice';
+import { selectedPokemonsReducer } from '~/redux/pokemons/slice';
 
 export const store = configureStore({
   reducer: {
-    selectedItems: selectedItemsReducer,
+    selectedPokemons: selectedPokemonsReducer,
   },
 });
 
