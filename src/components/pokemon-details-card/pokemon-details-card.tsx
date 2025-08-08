@@ -62,6 +62,7 @@ export const PokemonDetailsCard = () => {
             {pokemon?.name}
           </h2>
           <CustomButton
+            theme={theme}
             onClick={handleClose}
             classes="!ml-0 !mt-0 !px-3 !py-1 text-sm border"
           >
