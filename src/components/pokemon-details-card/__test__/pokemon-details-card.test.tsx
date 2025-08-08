@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { PokemonDetailsCard } from '~/components/pokemon-details-card';
-import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
+import { getPokemonDetails } from '~/api/pokemon-api/pokemon-api';
 import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';

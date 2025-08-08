@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
-import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
+import { useGetPokemonDetailsQuery } from '~/api/pokemon-api';
 import { TEST_IDS } from '~/constants/test-ids';
 import { LoadingWrapper } from '~/hoc/loading-wrapper';
 import { PokemonInfo } from '~/components/pokemon-details-card/components/pokemon-info/pokemon-info';
@@ -16,27 +14,14 @@ export const PokemonDetailsCard = () => {
   const { theme } = useTheme();
 
   const id = query.get('details');
-  const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (!id) return;
-
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const data = await getPokemonDetails(id as string);
-        setPokemon(data);
-      } catch (error) {
-        console.error('Failed to fetch pokemon details:', error);
-        setPokemon(null);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [id]);
+  const {
+    data: pokemon,
+    isLoading,
+    isError,
+  } = useGetPokemonDetailsQuery(id ?? '', {
+    skip: !id,
+  });
 
   const handleClose = () => {
     query.delete('details');
@@ -70,10 +55,10 @@ export const PokemonDetailsCard = () => {
           </CustomButton>
         </div>
 
-        {pokemon ? (
-          <PokemonInfo pokemon={pokemon} />
+        {isError ? (
+          <p>Failed to fetch pokemon details.</p>
         ) : (
-          <p>Pokemon not found.</p>
+          pokemon && <PokemonInfo pokemon={pokemon} />
         )}
       </div>
     </LoadingWrapper>

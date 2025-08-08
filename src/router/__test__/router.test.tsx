@@ -12,7 +12,7 @@ import { AboutPage } from '~/pages/about-page';
 import { NotFoundPage } from '~/pages/not-found-page';
 
 import { vi } from 'vitest';
-import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
+import { getPokemonDetails } from '~/api/pokemon-api/pokemon-api';
 import type { Mock } from 'vitest';
 import { TEST_IDS } from '~/constants/test-ids';
 import { selectedPokemonsReducer } from '~/redux/pokemons/slice';

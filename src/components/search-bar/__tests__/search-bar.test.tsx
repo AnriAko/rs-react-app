@@ -3,7 +3,7 @@ import { Router } from 'react-router';
 import { createMemoryHistory } from 'history';
 import { vi } from 'vitest';
 import { SearchBar } from '~/components/search-bar/search-bar';
-import { getPokemons } from '~/api/pokemon-api/pokemon-service';
+import { getPokemons } from '~/api/pokemon-api/pokemon-api';
 import { TEST_IDS } from '~/constants/test-ids';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 
