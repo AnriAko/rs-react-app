@@ -10,14 +10,14 @@ import { CustomButton } from '~/ui/custom-button';
 import { parsePaginationParams } from '~/utils/parse-pagination-params-from-url';
 import { parseOffsetPaginationParams } from '~/utils/parse-offset-pagination-params';
 import { buildPaginationQuery } from '~/utils/building-pagination-query';
-import { Theme } from '~/context/theme/theme-context';
+import { Theme, theme } from '~/context/theme/theme-context';
 import { handleApiError } from '~/utils/handle-api-error';
 
 type SearchBarProps = {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange?: (loading: boolean) => void;
   onError?: (message: string) => void;
-  theme: Theme;
+  theme: theme;
 };
 
 const PREVIOUS_REQUEST = 'previousRequest';
@@ -55,17 +55,22 @@ export const SearchBar = ({
     buildPaginationQuery(validInitialLimit, validInitialPage)
   );
 
-  const { data, error, isFetching } = useGetPokemonsQuery(queryForRequest);
+  const { data, error, isLoading, isFetching, isError, refetch } =
+    useGetPokemonsQuery(queryForRequest);
+
+  const isBusy = isLoading || (isFetching && !!data);
 
   useEffect(() => {
     setSearchResult(data?.results ?? []);
   }, [data, setSearchResult]);
 
   useEffect(() => {
-    onLoadingChange?.(isFetching);
-  }, [isFetching, onLoadingChange]);
+    onLoadingChange?.(isBusy);
+  }, [isBusy, onLoadingChange]);
 
   useEffect(() => {
+    if (!isError) return;
+
     const message = handleApiError(error, {
       onError,
       clearOnSuccess: true,
@@ -75,7 +80,7 @@ export const SearchBar = ({
     if (message) {
       setSearchResult([]);
     }
-  }, [error, onError, setSearchResult]);
+  }, [isError, error, onError, setSearchResult]);
 
   const updateUrlQueryParams = (limitParam: number, pageParam: number) => {
     const queryStr = `?limit=${limitParam}&page=${pageParam}`;
@@ -126,11 +131,15 @@ export const SearchBar = ({
     updateUrlQueryParams(validLimit, validPage);
   };
 
+  const handleRefreshClick = () => {
+    refetch();
+  };
+
   return (
     <div
       className={cl('flex flex-col gap-4 p-4 rounded-md', {
-        'bg-gray-800': theme === 'dark',
-        'bg-gray-200': theme === 'light',
+        'bg-gray-800': theme === Theme.dark,
+        'bg-gray-200': theme === Theme.light,
       })}
       data-testid={TEST_IDS.bar.container}
     >
@@ -139,21 +148,28 @@ export const SearchBar = ({
           limit={limit}
           page={page}
           setSearchRequest={setSearchRequest}
-          isLoading={isFetching}
+          isLoading={isBusy}
           prevUrl={data?.previous ?? null}
           nextUrl={data?.next ?? null}
           fetchFromFullUrl={fetchFromFullUrl}
           theme={theme}
         />
-
+        <CustomButton
+          theme={theme}
+          onClick={handleRefreshClick}
+          disabled={isBusy}
+          classes="w-32 text-center"
+        >
+          Refresh
+        </CustomButton>
         <CustomButton
           theme={theme}
           onClick={handleSearchClick}
-          disabled={isFetching}
+          disabled={isBusy}
           dataTestId={TEST_IDS.bar.btnSearch}
           classes="w-32 text-center"
         >
-          {isFetching ? 'Loading...' : 'Search'}
+          {isBusy ? 'Loading...' : 'Search'}
         </CustomButton>
       </div>
     </div>

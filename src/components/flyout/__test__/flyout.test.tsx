@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Flyout } from '~/components/flyout';
 import * as reactRedux from 'react-redux';
 import { vi } from 'vitest';
+import { Theme } from '~/context/theme/theme-context';
 
 type Pokemon = {
   id: string;
@@ -12,7 +13,7 @@ type Pokemon = {
 global.URL.createObjectURL = vi.fn(() => 'mocked-url');
 
 vi.mock('@context/theme/theme-context', () => ({
-  useTheme: () => ({ theme: 'light' }),
+  useTheme: () => ({ theme: Theme.light }),
 }));
 
 vi.mock('react-redux', () => ({

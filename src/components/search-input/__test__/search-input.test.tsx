@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import { SearchInput } from '~/components/search-input/search-input';
 import { TEST_IDS } from '~/constants/test-ids';
+import { Theme } from '~/context/theme/theme-context';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 
 describe('SearchInput', () => {
@@ -16,7 +17,7 @@ describe('SearchInput', () => {
     prevUrl: 'prev-url',
     nextUrl: 'next-url',
     fetchFromFullUrl: fetchMock,
-    theme: 'light',
+    theme: Theme.light,
   };
 
   beforeEach(() => {

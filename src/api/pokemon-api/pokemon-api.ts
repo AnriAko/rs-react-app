@@ -10,24 +10,33 @@ const reducerPath = 'pokemonApi';
 export const pokemonApi = createApi({
   reducerPath,
   baseQuery: axiosBaseQuery(),
+
+  tagTypes: ['Pokemon'],
+
   endpoints: (builder) => ({
     getPokemonDetails: builder.query<PokemonDetails, string>({
       query: (id) => ({
         url: POKEMON_API_ROUTES.DETAILS(id),
         method: 'GET',
       }),
+      providesTags: ['Pokemon'],
     }),
+
     getPokemons: builder.query<GetPokemons, string | undefined>({
       query: (query) => ({
         url: POKEMON_API_ROUTES.LIST(query),
         method: 'GET',
       }),
+      providesTags: ['Pokemon'],
     }),
   }),
 });
 
-export const { useGetPokemonDetailsQuery, useGetPokemonsQuery } = pokemonApi;
+export const {
+  useGetPokemonDetailsQuery,
+  useGetPokemonsQuery,
+  util: { invalidateTags },
+} = pokemonApi;
 
 export const pokemonApiReducer = pokemonApi.reducer;
 export const pokemonApiMiddleware = pokemonApi.middleware;
-export const pokemonApiReducerPath = reducerPath;

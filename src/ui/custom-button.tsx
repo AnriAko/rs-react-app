@@ -1,6 +1,6 @@
 import cl from 'classnames';
 import { ReactNode } from 'react';
-import { Theme } from '~/context/theme/theme-context';
+import { Theme, theme } from '~/context/theme/theme-context';
 
 const baseClasses =
   'px-4 py-2 rounded whitespace-nowrap h-[38px] flex items-center justify-center font-medium';
@@ -24,7 +24,7 @@ const themeClasses = {
 };
 
 type Props = {
-  theme: Theme;
+  theme: theme;
   onClick?: () => void;
   id?: string;
   dataTestId?: string;
@@ -44,7 +44,7 @@ export const CustomButton = ({
   darkClasses,
   children,
   disabled,
-  theme = 'light',
+  theme = Theme.light,
 }: Props) => (
   <button
     id={id}
@@ -53,7 +53,7 @@ export const CustomButton = ({
     disabled={disabled}
     className={cl(
       baseClasses,
-      theme === 'light'
+      theme === Theme.light
         ? themeClasses.light(!!disabled)
         : themeClasses.dark(!!disabled, darkClasses),
       classes

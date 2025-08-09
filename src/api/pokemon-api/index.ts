@@ -1,7 +1,5 @@
 export { useGetPokemonDetailsQuery, useGetPokemonsQuery } from './pokemon-api';
 
-export {
-  pokemonApiReducer,
-  pokemonApiMiddleware,
-  pokemonApiReducerPath,
-} from './pokemon-api';
+export { pokemonApiReducer, pokemonApiMiddleware } from './pokemon-api';
+
+export { pokemonApi } from './pokemon-api';

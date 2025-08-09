@@ -11,6 +11,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 import { vi } from 'vitest';
 import { selectedPokemonsReducer, togglePokemon } from '~/redux/pokemons/slice';
+import { Theme } from '~/context/theme/theme-context';
 
 describe('PokemonCard', () => {
   const mockOnSelect = vi.fn();
@@ -18,7 +19,7 @@ describe('PokemonCard', () => {
   const defaultProps = {
     name: 'pikachu',
     id: '25',
-    theme: 'light' as const,
+    theme: Theme.light,
     onSelect: mockOnSelect,
   };
 
@@ -90,7 +91,7 @@ describe('PokemonCard with pre-selected item', () => {
   const defaultProps = {
     name: 'pikachu',
     id: '25',
-    theme: 'light' as const,
+    theme: Theme.light,
     onSelect: mockOnSelect,
   };
 

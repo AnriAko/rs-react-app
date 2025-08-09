@@ -1,5 +1,9 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '~/redux/store';
-import { Pokemon } from '~/api/pokemon-api/types/pokemon';
 
-export const selectSelectedPokemons = (state: RootState): Pokemon[] =>
-  Object.values(state.selectedPokemons.pokemons);
+const selectPokemonsMap = (state: RootState) => state.selectedPokemons.pokemons;
+
+export const selectSelectedPokemons = createSelector(
+  [selectPokemonsMap],
+  (pokemonsMap) => Object.values(pokemonsMap)
+);

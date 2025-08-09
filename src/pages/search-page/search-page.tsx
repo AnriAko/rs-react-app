@@ -6,7 +6,7 @@ import { PokemonList } from '~/components/pokemon-list';
 import { PokemonDetailsCard } from '~/components/pokemon-details-card';
 import type { Pokemon } from '~/api/pokemon-api/types/pokemon';
 import { LoadingWrapper } from '~/hoc/loading-wrapper';
-import { useTheme } from '~/context/theme/theme-context';
+import { Theme, useTheme } from '~/context/theme/theme-context';
 import { Flyout } from '~/components/flyout';
 
 export const SearchPage = () => {
@@ -37,14 +37,14 @@ export const SearchPage = () => {
   return (
     <div
       className={cl('min-h-screen px-6 py-8', {
-        'bg-gray-900 text-white': theme === 'dark',
-        'bg-white text-gray-900': theme === 'light',
+        'bg-gray-900 text-white': theme === Theme.dark,
+        'bg-white text-gray-900': theme === Theme.light,
       })}
     >
       <h1
         className={cl('text-2xl font-bold mb-6 text-center', {
-          'text-white': theme === 'dark',
-          'text-gray-900': theme === 'light',
+          'text-white': theme === Theme.dark,
+          'text-gray-900': theme === Theme.light,
         })}
       >
         Pokemon search page
@@ -60,8 +60,8 @@ export const SearchPage = () => {
       {errorMessage && (
         <div
           className={cl('p-4 rounded-md mb-4 mt-6', {
-            'bg-red-700 text-red-100': theme === 'dark',
-            'bg-red-200 text-red-800': theme === 'light',
+            'bg-red-700 text-red-100': theme === Theme.dark,
+            'bg-red-200 text-red-800': theme === Theme.light,
           })}
         >
           Error: {errorMessage}

@@ -1,10 +1,15 @@
 import { createContext, useContext } from 'react';
 
-type Theme = 'light' | 'dark';
+export const Theme = Object.freeze({
+  light: 'light',
+  dark: 'dark',
+});
+
+export type theme = (typeof Theme)[keyof typeof Theme];
 
 type ThemeContextType = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  theme: theme;
+  setTheme: (theme: theme) => void;
 };
 
 const defaultTheme: ThemeContextType = {
@@ -12,10 +17,8 @@ const defaultTheme: ThemeContextType = {
   setTheme: () => {},
 };
 
-const ThemeContext = createContext<ThemeContextType>(defaultTheme);
+export const ThemeContext = createContext<ThemeContextType>(defaultTheme);
 
 export const useTheme = (): ThemeContextType => {
   return useContext(ThemeContext);
 };
-
-export { ThemeContext, Theme };

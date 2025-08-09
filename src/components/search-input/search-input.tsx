@@ -9,7 +9,7 @@ import { TEST_IDS } from '~/constants/test-ids';
 import { CustomTextInput } from '~/ui/custom-text-input';
 import { CustomButton } from '~/ui/custom-button';
 import { NullableString } from '~/types/nullable-string';
-import { Theme } from '~/context/theme/theme-context';
+import { theme } from '~/context/theme/theme-context';
 
 export type SearchInputHandle = {
   getValues: () => { limit: number; page: number };
@@ -26,7 +26,7 @@ type SearchInputProps = {
   prevUrl: NullableString;
   nextUrl: NullableString;
   fetchFromFullUrl: (url: string) => void;
-  theme: Theme;
+  theme: theme;
 };
 
 export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
