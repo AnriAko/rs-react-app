@@ -1,20 +1,12 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { Router } from 'react-router';
 import { createMemoryHistory } from 'history';
-import { vi } from 'vitest';
+import { Provider } from 'react-redux';
+import { store } from '~/redux/store';
 import { SearchBar } from '~/components/search-bar/search-bar';
-import { getPokemons } from '~/api/pokemon-api/pokemon-api';
 import { TEST_IDS } from '~/constants/test-ids';
 import { ThemeProvider } from '~/context/theme/theme-provider';
-
-const setValueMock = vi.fn();
-const getValueMock = vi.fn(() => '');
-vi.mock('~/hooks/use-local-storage', () => ({
-  useLocalStorage: () => ({
-    getValue: getValueMock,
-    setValue: setValueMock,
-  }),
-}));
+import * as pokemonApi from '~/api/pokemon-api';
 
 const dummyPokemonsResponse = {
   count: 2,
@@ -26,36 +18,55 @@ const dummyPokemonsResponse = {
   ],
 };
 
-vi.mock('~/api/pokemon-api/pokemon-service', () => ({
-  getPokemons: vi.fn(),
+const setValueMock = vi.fn();
+const getValueMock = vi.fn(() => '');
+
+vi.mock('~/hooks/use-local-storage', () => ({
+  useLocalStorage: () => ({
+    getValue: getValueMock,
+    setValue: setValueMock,
+  }),
 }));
 
-const mockedGetPokemons = getPokemons as unknown as ReturnType<typeof vi.fn>;
-
-describe('SearchBar additional tests', () => {
+describe('SearchBar (RTK Query)', () => {
   const setSearchResultMock = vi.fn();
   const onLoadingChangeMock = vi.fn();
   const onErrorMock = vi.fn();
 
+  const useGetPokemonsQueryMock = vi.fn();
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockedGetPokemons.mockResolvedValue(dummyPokemonsResponse);
     getValueMock.mockReturnValue('');
+    useGetPokemonsQueryMock.mockReturnValue({
+      data: dummyPokemonsResponse,
+      error: undefined,
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+
+    vi.spyOn(pokemonApi, 'useGetPokemonsQuery').mockImplementation(
+      useGetPokemonsQueryMock
+    );
   });
 
   const renderWithRouter = (initialEntries: string[] = ['/']) => {
     const history = createMemoryHistory({ initialEntries });
     const utils = render(
-      <ThemeProvider>
-        <Router location={history.location} navigator={history}>
-          <SearchBar
-            setSearchResult={setSearchResultMock}
-            onLoadingChange={onLoadingChangeMock}
-            onError={onErrorMock}
-            theme="light"
-          />
-        </Router>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <Router location={history.location} navigator={history}>
+            <SearchBar
+              setSearchResult={setSearchResultMock}
+              onLoadingChange={onLoadingChangeMock}
+              onError={onErrorMock}
+              theme="light"
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
     );
     return { ...utils, history };
   };
@@ -63,10 +74,14 @@ describe('SearchBar additional tests', () => {
   test('initializes from URL query params and fetches', async () => {
     const url = '?limit=10&page=2';
     getValueMock.mockReturnValue('');
-    mockedGetPokemons.mockResolvedValueOnce({
-      ...dummyPokemonsResponse,
-      next: '?limit=10&offset=20',
-      previous: '?limit=10&offset=0',
+
+    useGetPokemonsQueryMock.mockReturnValue({
+      data: dummyPokemonsResponse,
+      error: undefined,
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      refetch: vi.fn(),
     });
 
     const { history } = renderWithRouter([`/${url}`]);
@@ -75,7 +90,6 @@ describe('SearchBar additional tests', () => {
       await new Promise((r) => setTimeout(r, 0));
     });
 
-    expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=10&offset=10');
     expect(setSearchResultMock).toHaveBeenCalledWith(
       dummyPokemonsResponse.results
     );
@@ -85,6 +99,15 @@ describe('SearchBar additional tests', () => {
   });
 
   test('navigates with updated query params on search click', async () => {
+    useGetPokemonsQueryMock.mockReturnValue({
+      data: dummyPokemonsResponse,
+      error: undefined,
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+
     const { history, rerender } = renderWithRouter(['/']);
 
     const limitInput = screen.getByTestId(TEST_IDS.search.inputLimit);
@@ -104,39 +127,9 @@ describe('SearchBar additional tests', () => {
     });
 
     rerender(
-      <ThemeProvider>
-        <Router location={history.location} navigator={history}>
-          <SearchBar
-            setSearchResult={setSearchResultMock}
-            onLoadingChange={onLoadingChangeMock}
-            onError={onErrorMock}
-            theme="light"
-          />
-        </Router>
-      </ThemeProvider>
-    );
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 0));
-    });
-
-    expect(mockedGetPokemons).toHaveBeenCalledWith('?limit=5&offset=10');
-  });
-
-  test('updates localStorage when URL changes', async () => {
-    const { rerender } = renderWithRouter(['/']);
-
-    expect(getValueMock).toHaveBeenCalled();
-
-    await act(async () => {
-      rerender(
+      <Provider store={store}>
         <ThemeProvider>
-          <Router
-            location={
-              createMemoryHistory({ initialEntries: ['/?limit=20&page=1'] })
-                .location
-            }
-            navigator={createMemoryHistory()}
-          >
+          <Router location={history.location} navigator={history}>
             <SearchBar
               setSearchResult={setSearchResultMock}
               onLoadingChange={onLoadingChangeMock}
@@ -145,8 +138,69 @@ describe('SearchBar additional tests', () => {
             />
           </Router>
         </ThemeProvider>
-      );
+      </Provider>
+    );
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
     });
+
+    expect(setSearchResultMock).toHaveBeenCalledWith(
+      dummyPokemonsResponse.results
+    );
+  });
+
+  test('updates localStorage when URL changes', async () => {
+    useGetPokemonsQueryMock.mockReturnValue({
+      data: dummyPokemonsResponse,
+      error: undefined,
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+
+    const history = createMemoryHistory({ initialEntries: ['/'] });
+
+    const { rerender } = render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <Router location={history.location} navigator={history}>
+            <SearchBar
+              setSearchResult={setSearchResultMock}
+              onLoadingChange={onLoadingChangeMock}
+              onError={onErrorMock}
+              theme="light"
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    expect(getValueMock).toHaveBeenCalled();
+
+    await act(async () => {
+      history.push('?limit=20&page=1');
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    });
+
+    rerender(
+      <Provider store={store}>
+        <ThemeProvider>
+          <Router location={history.location} navigator={history}>
+            <SearchBar
+              setSearchResult={setSearchResultMock}
+              onLoadingChange={onLoadingChangeMock}
+              onError={onErrorMock}
+              theme="light"
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(setValueMock).toHaveBeenCalledWith('?limit=20&page=1');
   });

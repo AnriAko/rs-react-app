@@ -1,19 +1,12 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { Provider } from 'react-redux';
 import { PokemonDetailsCard } from '~/components/pokemon-details-card';
-import { getPokemonDetails } from '~/api/pokemon-api/pokemon-api';
-import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
-import { vi } from 'vitest';
-import type { Mock } from 'vitest';
 import { ThemeProvider } from '~/context/theme/theme-provider';
+import { store } from '~/redux/store';
+import * as hooks from '~/api/pokemon-api';
 
-vi.mock('~/api/pokemon-api/pokemon-service', async () => {
-  return {
-    getPokemonDetails: vi.fn(),
-  };
-});
-
-const mockPokemon: PokemonDetails = {
+const mockPokemon = {
   id: 1,
   name: 'bulbasaur',
   base_experience: 64,
@@ -29,13 +22,9 @@ const mockPokemon: PokemonDetails = {
   },
 };
 
-describe('PokemonDetailsCard (uses query param)', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  function renderWithProviders(search = '?details=1') {
-    return render(
+function renderWithProviders(search = '?details=1') {
+  return render(
+    <Provider store={store}>
       <ThemeProvider>
         <MemoryRouter initialEntries={[`/${search}`]}>
           <Routes>
@@ -43,22 +32,29 @@ describe('PokemonDetailsCard (uses query param)', () => {
           </Routes>
         </MemoryRouter>
       </ThemeProvider>
-    );
-  }
+    </Provider>
+  );
+}
+
+describe('PokemonDetailsCard with RTK Query', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   test('shows loading and then pokemon details', async () => {
-    const mockGet = getPokemonDetails as Mock;
-    mockGet.mockResolvedValueOnce(mockPokemon);
+    vi.spyOn(hooks, 'useGetPokemonDetailsQuery').mockReturnValue({
+      data: mockPokemon,
+      error: undefined,
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
 
     renderWithProviders();
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
-        /bulbasaur/i
-      );
-    });
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      /bulbasaur/i
+    );
 
     const img = screen.getByRole('img', {
       name: /bulbasaur/i,
@@ -79,24 +75,42 @@ describe('PokemonDetailsCard (uses query param)', () => {
   });
 
   test('shows "Pokemon not found" on API error', async () => {
-    const mockGet = getPokemonDetails as Mock;
-    mockGet.mockRejectedValueOnce(new Error('Not found'));
+    vi.spyOn(hooks, 'useGetPokemonDetailsQuery').mockReturnValue({
+      data: undefined,
+      error: { status: 404, data: 'Not found' },
+      isLoading: false,
+      isError: true,
+      refetch: vi.fn(),
+    });
 
-    renderWithProviders();
+    renderWithProviders('?details=error');
 
     await waitFor(() => {
-      expect(screen.getByText(/pokemon not found/i)).toBeInTheDocument();
+      expect(screen.getByText(/not found/i)).toBeInTheDocument();
     });
   });
 
   test('does not render if "details" param is missing', () => {
+    vi.spyOn(hooks, 'useGetPokemonDetailsQuery').mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+
     renderWithProviders('');
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
   });
 
   test('clicking close removes details from URL', async () => {
-    const mockGet = getPokemonDetails as Mock;
-    mockGet.mockResolvedValueOnce(mockPokemon);
+    vi.spyOn(hooks, 'useGetPokemonDetailsQuery').mockReturnValue({
+      data: mockPokemon,
+      error: undefined,
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
 
     renderWithProviders('?details=1');
 

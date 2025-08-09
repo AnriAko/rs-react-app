@@ -1,6 +1,5 @@
 import { renderHook } from '@testing-library/react';
 import { useLocalStorage } from '~/hooks/use-local-storage';
-import { vi } from 'vitest';
 
 describe('useLocalStorage', () => {
   const KEY = 'test-key';

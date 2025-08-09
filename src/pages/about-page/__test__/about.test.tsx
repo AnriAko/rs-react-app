@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { AboutPage } from '~/pages/about-page/about-page';
-import { vi } from 'vitest';
 import type * as RRDom from 'react-router';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 

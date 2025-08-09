@@ -9,7 +9,6 @@ import { PokemonCard } from '~/components/pokemon-card/pokemon-card';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { ThemeProvider } from '~/context/theme/theme-provider';
-import { vi } from 'vitest';
 import { selectedPokemonsReducer, togglePokemon } from '~/redux/pokemons/slice';
 import { Theme } from '~/context/theme/theme-context';
 

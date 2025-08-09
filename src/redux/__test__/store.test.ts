@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { togglePokemon, clearAllPokemons } from '~/redux/pokemons/slice';
 import { selectedPokemonsReducer } from '~/redux/pokemons/slice';
+import { pokemonApi } from '~/api/pokemon-api';
 
 describe('selectedPokemons slice', () => {
   let store: ReturnType<typeof createTestStore>;
@@ -9,7 +10,10 @@ describe('selectedPokemons slice', () => {
     configureStore({
       reducer: {
         selectedPokemons: selectedPokemonsReducer,
+        [pokemonApi.reducerPath]: pokemonApi.reducer,
       },
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(pokemonApi.middleware),
     });
 
   const samplePokemon = {

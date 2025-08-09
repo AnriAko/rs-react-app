@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Flyout } from '~/components/flyout';
 import * as reactRedux from 'react-redux';
-import { vi } from 'vitest';
 import { Theme } from '~/context/theme/theme-context';
 
 type Pokemon = {

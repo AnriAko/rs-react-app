@@ -134,6 +134,9 @@ export const SearchBar = ({
   const handleRefreshClick = () => {
     refetch();
   };
+  useEffect(() => {
+    setValue(search);
+  }, [search, setValue]);
 
   return (
     <div
