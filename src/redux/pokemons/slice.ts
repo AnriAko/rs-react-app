@@ -14,7 +14,7 @@ const initialState: SelectedPokemonsState = {
   pokemons: {},
 };
 
-const selectedPokemonsSlice = createSlice({
+export const selectedPokemonsSlice = createSlice({
   name: 'selectedPokemons',
   initialState,
   reducers: {

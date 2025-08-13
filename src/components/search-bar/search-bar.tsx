@@ -55,18 +55,16 @@ export const SearchBar = ({
     buildPaginationQuery(validInitialLimit, validInitialPage)
   );
 
-  const { data, error, isLoading, isFetching, isError, refetch } =
+  const { data, error, isFetching, isError, refetch } =
     useGetPokemonsQuery(queryForRequest);
-
-  const isBusy = isLoading || (isFetching && !!data);
 
   useEffect(() => {
     setSearchResult(data?.results ?? []);
   }, [data, setSearchResult]);
 
   useEffect(() => {
-    onLoadingChange?.(isBusy);
-  }, [isBusy, onLoadingChange]);
+    onLoadingChange?.(isFetching);
+  }, [isFetching, onLoadingChange]);
 
   useEffect(() => {
     if (!isError) return;
@@ -150,7 +148,7 @@ export const SearchBar = ({
           limit={limit}
           page={page}
           setSearchRequest={setSearchRequest}
-          isLoading={isBusy}
+          isLoading={isFetching}
           prevUrl={data?.previous ?? null}
           nextUrl={data?.next ?? null}
           fetchFromFullUrl={fetchFromFullUrl}
@@ -159,7 +157,7 @@ export const SearchBar = ({
         <CustomButton
           theme={theme}
           onClick={handleRefreshClick}
-          disabled={isBusy}
+          disabled={isFetching}
           classes="w-32 text-center"
         >
           Refresh
@@ -167,11 +165,11 @@ export const SearchBar = ({
         <CustomButton
           theme={theme}
           onClick={handleSearchClick}
-          disabled={isBusy}
+          disabled={isFetching}
           dataTestId={TEST_IDS.bar.btnSearch}
           classes="w-32 text-center"
         >
-          {isBusy ? 'Loading...' : 'Search'}
+          {isFetching ? 'Loading...' : 'Search'}
         </CustomButton>
       </div>
     </div>

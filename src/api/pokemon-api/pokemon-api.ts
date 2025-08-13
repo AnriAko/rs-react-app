@@ -27,7 +27,16 @@ export const pokemonApi = createApi({
         url: POKEMON_API_ROUTES.LIST(query),
         method: 'GET',
       }),
-      providesTags: ['Pokemon'],
+      providesTags: (getPokemons) =>
+        getPokemons
+          ? [
+              ...getPokemons.results.map(({ name }) => ({
+                type: 'Pokemon' as const,
+                id: name,
+              })),
+              { type: 'Pokemon', id: 'LIST' },
+            ]
+          : [{ type: 'Pokemon', id: 'LIST' }],
     }),
   }),
 });

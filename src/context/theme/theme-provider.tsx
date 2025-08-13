@@ -9,7 +9,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }, [theme]);
 
   const setTheme = useCallback((newTheme: theme) => {
-    setThemeState(newTheme);
+    setThemeState((prevTheme) =>
+      prevTheme === newTheme ? prevTheme : newTheme
+    );
   }, []);
 
   return (
