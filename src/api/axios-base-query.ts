@@ -1,5 +1,5 @@
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
-import type { AxiosRequestConfig, AxiosError } from 'axios';
+import { isAxiosError, type AxiosRequestConfig } from 'axios';
 import { api } from '~/api/axios';
 
 export const axiosBaseQuery =
@@ -17,13 +17,20 @@ export const axiosBaseQuery =
     try {
       const result = await api({ url, method, data, params });
       return { data: result.data };
-    } catch (axiosError) {
-      const err = axiosError as AxiosError;
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
-        },
-      };
+    } catch (err) {
+      if (isAxiosError(err)) {
+        return {
+          error: {
+            status: err.response?.status ?? 500,
+            data: err.response?.data ?? err.message,
+          },
+        };
+      } else
+        return {
+          error: {
+            status: 500,
+            data: (err as Error).message ?? 'Unknown error',
+          },
+        };
     }
   };

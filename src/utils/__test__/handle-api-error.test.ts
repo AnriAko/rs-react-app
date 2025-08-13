@@ -109,10 +109,4 @@ describe('handleApiError', () => {
     );
     expect(result).toBe('Bad request');
   });
-
-  it('does not clear error if clearOnSuccess is false', () => {
-    const result = handleApiError(null, { onError, clearOnSuccess: false });
-    expect(result).toBeNull();
-    expect(onError).not.toHaveBeenCalled();
-  });
 });

@@ -19,15 +19,12 @@ export const PokemonDetailsCard = () => {
 
   const {
     data: pokemon,
-    isLoading,
     isFetching,
     isError,
     error,
   } = useGetPokemonDetailsQuery(id ?? '', {
     skip: !id,
   });
-
-  const isBusy = isLoading || isFetching;
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -47,7 +44,7 @@ export const PokemonDetailsCard = () => {
   if (!id) return null;
 
   return (
-    <LoadingWrapper loading={isBusy}>
+    <LoadingWrapper loading={isFetching}>
       <div
         data-testid={TEST_IDS.pokemonDetails.wrapper}
         className={cl('mt-5 w-full rounded-xl border-4 p-4', {

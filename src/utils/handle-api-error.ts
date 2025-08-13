@@ -1,4 +1,4 @@
-import type { AxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import type { SerializedError } from '@reduxjs/toolkit';
 import { NullableString } from '~/types/nullable-string';
 
@@ -17,8 +17,8 @@ export function handleApiError(
 ): NullableString {
   const { onError, clearOnSuccess = true, log = false } = options ?? {};
 
-  if (!error) {
-    if (clearOnSuccess) onError?.('');
+  if (!error && clearOnSuccess) {
+    onError?.('');
     return null;
   }
 
@@ -58,10 +58,6 @@ function isRTKQueryError(error: unknown): error is RTKQueryError {
     'status' in error &&
     'data' in error
   );
-}
-
-function isAxiosError(error: unknown): error is AxiosError {
-  return typeof error === 'object' && error !== null && 'isAxiosError' in error;
 }
 
 function isSerializedError(error: unknown): error is SerializedError {
