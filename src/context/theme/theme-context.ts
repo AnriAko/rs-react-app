@@ -19,6 +19,4 @@ const defaultTheme: ThemeContextType = {
 
 export const ThemeContext = createContext<ThemeContextType>(defaultTheme);
 
-export const useTheme = (): ThemeContextType => {
-  return useContext(ThemeContext);
-};
+export const useTheme = (): ThemeContextType => useContext(ThemeContext);

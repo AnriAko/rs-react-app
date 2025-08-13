@@ -84,7 +84,7 @@ export const SearchBar = ({
 
   const updateUrlQueryParams = (limitParam: number, pageParam: number) => {
     const queryStr = `?limit=${limitParam}&page=${pageParam}`;
-    navigate(queryStr, { replace: false });
+    navigate(queryStr);
     setValue(queryStr);
   };
 
@@ -131,9 +131,8 @@ export const SearchBar = ({
     updateUrlQueryParams(validLimit, validPage);
   };
 
-  const handleRefreshClick = () => {
-    refetch();
-  };
+  const handleRefreshClick = () => refetch();
+
   useEffect(() => {
     setValue(search);
   }, [search, setValue]);
