@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 import { SearchPage } from '~/pages/search-page/search-page';
 import { selectedPokemonsReducer } from '~/redux/pokemons/slice';
-import { Theme } from '~/context/theme/theme-context';
+import { theme } from '~/context/theme/theme-context';
 
 global.URL.createObjectURL = vi.fn(() => 'mock-url');
 
@@ -19,12 +19,12 @@ interface SearchBarProps {
   setSearchResult: (result: Pokemon[]) => void;
   onLoadingChange: (loading: boolean) => void;
   onError: (msg: string) => void;
-  theme: Theme;
+  theme: theme;
 }
 
 interface PokemonListProps {
   result: Pokemon[];
-  theme: Theme;
+  theme: theme;
 }
 
 vi.mock('~/components/search-bar', () => ({

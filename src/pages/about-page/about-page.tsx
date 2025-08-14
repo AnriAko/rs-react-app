@@ -1,4 +1,4 @@
-import { useTheme } from '~/context/theme/theme-context';
+import { Theme, useTheme } from '~/context/theme/theme-context';
 import cl from 'classnames';
 
 export const AboutPage = () => {
@@ -7,8 +7,8 @@ export const AboutPage = () => {
   return (
     <div
       className={cl('min-h-screen px-6 py-8', {
-        'bg-gray-100 text-gray-900': theme === 'light',
-        'bg-gray-900 text-white': theme === 'dark',
+        'bg-gray-100 text-gray-900': theme === Theme.light,
+        'bg-gray-900 text-white': theme === Theme.dark,
       })}
     >
       <h1 className="text-4xl font-bold mb-6 text-center">
@@ -28,8 +28,8 @@ export const AboutPage = () => {
               target="_blank"
               rel="noopener noreferrer"
               className={cl('underline', {
-                'text-blue-600 hover:text-blue-800': theme === 'light',
-                'text-blue-400 hover:text-blue-300': theme === 'dark',
+                'text-blue-600 hover:text-blue-800': theme === Theme.light,
+                'text-blue-400 hover:text-blue-300': theme === Theme.dark,
               })}
             >
               https://github.com/AnriAko
@@ -47,8 +47,8 @@ export const AboutPage = () => {
               target="_blank"
               rel="noopener noreferrer"
               className={cl('underline flex items-center gap-2', {
-                'text-blue-600 hover:text-blue-800': theme === 'light',
-                'text-blue-400 hover:text-blue-300': theme === 'dark',
+                'text-blue-600 hover:text-blue-800': theme === Theme.light,
+                'text-blue-400 hover:text-blue-300': theme === Theme.dark,
               })}
             >
               <img

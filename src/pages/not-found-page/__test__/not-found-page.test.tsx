@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { NotFoundPage } from '~/pages/not-found-page/not-found-page';
-import { vi } from 'vitest';
 import { ROUTES_PATH } from '~/router/routes-path';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 

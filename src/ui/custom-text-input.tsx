@@ -1,6 +1,6 @@
 import cl from 'classnames';
 import type { ChangeEvent } from 'react';
-import { Theme } from '~/context/theme/theme-context';
+import { Theme, theme } from '~/context/theme/theme-context';
 
 const inputBaseClasses = {
   light: cl(
@@ -19,7 +19,7 @@ const labelBaseClasses = {
 type Props = {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  theme: Theme;
+  theme: theme;
   id?: string;
   dataTestId?: string;
   classes?: string;
@@ -37,7 +37,7 @@ export const CustomTextInput = ({
   onChange,
   classes,
   darkClasses,
-  theme = 'light',
+  theme = Theme.light,
 }: Props) => (
   <div className="flex flex-col w-full">
     {label && (
@@ -58,7 +58,7 @@ export const CustomTextInput = ({
         inputBaseClasses[theme],
         classes,
         {
-          [darkClasses ?? '']: theme === 'dark' && !!darkClasses,
+          [darkClasses ?? '']: theme === Theme.dark && !!darkClasses,
         }
       )}
     />

@@ -1,6 +1,6 @@
 import cl from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { Theme } from '~/context/theme/theme-context';
+import { Theme, theme } from '~/context/theme/theme-context';
 import { togglePokemon } from '~/redux/pokemons/slice';
 import { RootState } from '~/redux/store';
 import { CustomCheckbox } from '~/ui/custom-checkbox';
@@ -8,7 +8,7 @@ import { CustomCheckbox } from '~/ui/custom-checkbox';
 type Props = {
   name: string;
   id: string;
-  theme: Theme;
+  theme: theme;
   onSelect: (id: string) => void;
 };
 
@@ -36,8 +36,8 @@ export const PokemonCard = ({ name, id, theme, onSelect }: Props) => {
   return (
     <div
       className={cl('p-4 max-h-15 flex items-center gap-4 cursor-pointer', {
-        'bg-gray-800 text-white hover:bg-gray-700': theme === 'dark',
-        'bg-gray-200 text-gray-900 hover:bg-gray-300': theme === 'light',
+        'bg-gray-800 text-white hover:bg-gray-700': theme === Theme.dark,
+        'bg-gray-200 text-gray-900 hover:bg-gray-300': theme === Theme.light,
       })}
       onClick={() => onSelect(id)}
     >

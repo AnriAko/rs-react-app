@@ -1,5 +1,5 @@
 import cl from 'classnames';
-import { Theme } from '~/context/theme/theme-context';
+import { Theme, theme } from '~/context/theme/theme-context';
 
 const baseStyles =
   'w-5 h-5 rounded border-1 flex items-center justify-center shrink-0 cursor-pointer';
@@ -34,7 +34,7 @@ const checkMark = (
 );
 
 type Props = {
-  theme: Theme;
+  theme: theme;
   id?: string;
   dataTestId?: string;
   checked: boolean;
@@ -53,7 +53,7 @@ export const CustomCheckbox = ({
   label,
   labelClasses,
   wrapperClasses,
-  theme = 'light',
+  theme = Theme.light,
   darkClasses,
 }: Props) => {
   return (

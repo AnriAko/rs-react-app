@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { getPokemonDetails } from '~/api/pokemon-api/pokemon-service';
-import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
+import { useGetPokemonDetailsQuery } from '~/api/pokemon-api';
 import { TEST_IDS } from '~/constants/test-ids';
 import { LoadingWrapper } from '~/hoc/loading-wrapper';
 import { PokemonInfo } from '~/components/pokemon-details-card/components/pokemon-info/pokemon-info';
 import { useQueryParams } from '~/hooks/use-query-params';
 import { CustomButton } from '~/ui/custom-button';
-import { useTheme } from '~/context/theme/theme-context';
+import { Theme, useTheme } from '~/context/theme/theme-context';
 import cl from 'classnames';
+import { handleApiError } from '~/utils/handle-api-error';
 
 export const PokemonDetailsCard = () => {
   const navigate = useNavigate();
@@ -16,27 +16,25 @@ export const PokemonDetailsCard = () => {
   const { theme } = useTheme();
 
   const id = query.get('details');
-  const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    data: pokemon,
+    isFetching,
+    isError,
+    error,
+  } = useGetPokemonDetailsQuery(id ?? '', {
+    skip: !id,
+  });
+
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    if (!id) return;
-
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const data = await getPokemonDetails(id as string);
-        setPokemon(data);
-      } catch (error) {
-        console.error('Failed to fetch pokemon details:', error);
-        setPokemon(null);
-      } finally {
-        setIsLoading(false);
-      }
+    if (isError) {
+      handleApiError(error, { onError: setErrorMessage, log: true });
+    } else {
+      setErrorMessage('');
     }
-
-    fetchData();
-  }, [id]);
+  }, [isError, error]);
 
   const handleClose = () => {
     query.delete('details');
@@ -46,12 +44,12 @@ export const PokemonDetailsCard = () => {
   if (!id) return null;
 
   return (
-    <LoadingWrapper loading={isLoading}>
+    <LoadingWrapper loading={isFetching}>
       <div
         data-testid={TEST_IDS.pokemonDetails.wrapper}
         className={cl('mt-5 w-full rounded-xl border-4 p-4', {
-          'bg-white border-gray-200 text-gray-900': theme === 'light',
-          'bg-gray-900 border-gray-800 text-white': theme === 'dark',
+          'bg-white border-gray-200 text-gray-900': theme === Theme.light,
+          'bg-gray-900 border-gray-800 text-white': theme === Theme.dark,
         })}
       >
         <div className="flex justify-between items-center mb-4">
@@ -70,10 +68,10 @@ export const PokemonDetailsCard = () => {
           </CustomButton>
         </div>
 
-        {pokemon ? (
-          <PokemonInfo pokemon={pokemon} />
+        {errorMessage ? (
+          <p className="text-red-600 dark:text-red-400">{errorMessage}</p>
         ) : (
-          <p>Pokemon not found.</p>
+          pokemon && <PokemonInfo pokemon={pokemon} />
         )}
       </div>
     </LoadingWrapper>

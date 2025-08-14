@@ -1,13 +1,13 @@
-import { useTheme } from '~/context/theme/theme-context';
+import { Theme, useTheme } from '~/context/theme/theme-context';
 import { Moon, Sun } from 'lucide-react';
 
 export const ToggleTheme = () => {
   const { theme, setTheme } = useTheme();
-  const isLight = theme === 'light';
+  const isLight = theme === Theme.light;
 
   return (
     <button
-      onClick={() => setTheme(isLight ? 'dark' : 'light')}
+      onClick={() => setTheme(isLight ? Theme.dark : Theme.light)}
       aria-label="Toggle theme"
       className="p-2 rounded-full cursor-pointer"
     >

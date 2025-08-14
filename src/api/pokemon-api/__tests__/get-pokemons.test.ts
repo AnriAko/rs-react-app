@@ -1,25 +1,55 @@
+import { configureStore } from '@reduxjs/toolkit';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import * as axiosModule from '../../axios';
-import type { GetPokemons } from '~/api/pokemon-api/types/pokemon';
+import * as axiosModule from '~/api/axios';
 import {
-  getPokemonDetails,
-  getPokemons,
-} from '~/api/pokemon-api/pokemon-service';
-import { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
+  pokemonApi,
+  pokemonApiReducer,
+  pokemonApiMiddleware,
+} from '~/api/pokemon-api';
+import type { GetPokemons } from '~/api/pokemon-api/types/pokemon';
+import type { PokemonDetails } from '~/api/pokemon-api/types/pokemon-details';
+import {
+  type AxiosResponse,
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+  AxiosHeaders,
+} from 'axios';
+import type { Mock } from 'vitest';
 
-vi.mock('../../axios', () => ({
-  api: {
-    get: vi.fn(),
-  },
+vi.mock('~/api/axios', () => ({
+  api: vi.fn(),
 }));
 
-const mockedApi = axiosModule.api;
-const mockedGet = mockedApi.get as unknown as ReturnType<typeof vi.fn>;
+const mockedApi = axiosModule.api as unknown as Mock;
 
-describe('pokemon-service', () => {
+const createMockAxiosConfig = (): InternalAxiosRequestConfig => ({
+  headers: new AxiosHeaders(),
+  method: 'get',
+  url: '',
+  transformRequest: [],
+  transformResponse: [],
+  timeout: 0,
+  withCredentials: false,
+});
+
+describe('pokemonApi (RTK Query)', () => {
+  let store: ReturnType<typeof setupStore>;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    store = setupStore();
   });
+
+  function setupStore() {
+    return configureStore({
+      reducer: {
+        [pokemonApi.reducerPath]: pokemonApiReducer,
+      },
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(pokemonApiMiddleware),
+    });
+  }
+
   const mockData: GetPokemons = {
     count: 2,
     next: null,
@@ -30,23 +60,57 @@ describe('pokemon-service', () => {
     ],
   };
 
-  test('getPokemons: returns pokemon list on success', async () => {
-    (mockedApi.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+  test('getPokemons: returns data on success', async () => {
+    const response: AxiosResponse = {
       data: mockData,
-    });
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: createMockAxiosConfig(),
+    };
 
-    const result = await getPokemons('?limit=2');
+    mockedApi.mockResolvedValueOnce(response);
 
-    expect(result).toEqual(mockData);
-    expect(mockedApi.get).toHaveBeenCalledWith('pokemon?limit=2');
-  });
-
-  test('getPokemons: throws error on failure', async () => {
-    (mockedApi.get as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new Error('Network Error')
+    const result = await store.dispatch(
+      pokemonApi.endpoints.getPokemons.initiate('?limit=2')
     );
 
-    await expect(getPokemons('?bad=query')).rejects.toThrow('Network Error');
+    expect(result.data).toEqual(mockData);
+
+    expect(mockedApi).toHaveBeenCalledWith({
+      url: 'pokemon?limit=2',
+      method: 'GET',
+      data: undefined,
+      params: undefined,
+    });
+  });
+
+  test('getPokemons: returns error on failure', async () => {
+    const error: AxiosError = {
+      name: 'AxiosError',
+      message: 'Bad request',
+      config: createMockAxiosConfig(),
+      isAxiosError: true,
+      toJSON: () => ({}),
+      response: {
+        status: 400,
+        data: 'Bad request',
+        statusText: 'Bad Request',
+        headers: {},
+        config: createMockAxiosConfig(),
+      },
+    };
+
+    mockedApi.mockRejectedValueOnce(error);
+
+    const result = await store.dispatch(
+      pokemonApi.endpoints.getPokemons.initiate('?bad=query')
+    );
+
+    expect(result.error).toMatchObject({
+      status: 400,
+      data: 'Bad request',
+    });
   });
 
   const mockDetails: PokemonDetails = {
@@ -84,33 +148,28 @@ describe('pokemon-service', () => {
     ],
   };
 
-  test('getPokemonDetails: returns pokemon details on success', async () => {
-    (mockedApi.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+  test('getPokemonDetails: returns details on success', async () => {
+    const response: AxiosResponse = {
       data: mockDetails,
-    });
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: createMockAxiosConfig(),
+    };
 
-    const result = await getPokemonDetails('1');
+    mockedApi.mockResolvedValueOnce(response);
 
-    expect(result).toEqual(mockDetails);
-    expect(mockedApi.get).toHaveBeenCalledWith('pokemon/1/');
-  });
-
-  test('getPokemonDetails: throws error on failure', async () => {
-    (mockedApi.get as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new Error('404 Not Found')
+    const result = await store.dispatch(
+      pokemonApi.endpoints.getPokemonDetails.initiate('1')
     );
 
-    await expect(getPokemonDetails('9999')).rejects.toThrow('404 Not Found');
-  });
-  test('getPokemons: returns pokemon list on success', async () => {
-    mockedGet.mockResolvedValueOnce({
-      data: mockData,
+    expect(result.data).toEqual(mockDetails);
+
+    expect(mockedApi).toHaveBeenCalledWith({
+      url: 'pokemon/1/',
+      method: 'GET',
+      data: undefined,
+      params: undefined,
     });
-
-    const result = await getPokemons('?limit=2');
-
-    console.log('Called with:', mockedGet.mock.calls[0][0]);
-    expect(result).toEqual(mockData);
-    expect(mockedGet).toHaveBeenCalledWith('pokemon?limit=2');
   });
 });

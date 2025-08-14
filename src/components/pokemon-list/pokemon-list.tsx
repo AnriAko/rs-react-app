@@ -3,11 +3,11 @@ import { PokemonCard } from '~/components/pokemon-card';
 import type { Pokemon } from '~/api/pokemon-api/types/pokemon';
 import cl from 'classnames';
 import './pokemon-list.styles.css';
-import { Theme } from '~/context/theme/theme-context';
+import { Theme, theme } from '~/context/theme/theme-context';
 
 type PokemonListProps = {
   result: Pokemon[];
-  theme: Theme;
+  theme: theme;
 };
 
 export const PokemonList = ({ result, theme }: PokemonListProps) => {
@@ -23,8 +23,8 @@ export const PokemonList = ({ result, theme }: PokemonListProps) => {
   return (
     <div
       className={cl('flex gap-6 mt-6 mb-3', {
-        'text-gray-900': theme === 'light',
-        'text-white': theme === 'dark',
+        'text-gray-900': theme === Theme.light,
+        'text-white': theme === Theme.dark,
       })}
       style={{ minHeight: '50vh' }}
     >
@@ -32,8 +32,8 @@ export const PokemonList = ({ result, theme }: PokemonListProps) => {
         className={cl(
           'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto thin-scrollbar',
           {
-            'bg-white': theme === 'light',
-            'bg-gray-900': theme === 'dark',
+            'bg-white': theme === Theme.light,
+            'bg-gray-900': theme === Theme.dark,
           }
         )}
         style={{ flex: 1, maxHeight: '50vh' }}
