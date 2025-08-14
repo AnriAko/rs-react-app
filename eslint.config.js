@@ -33,6 +33,11 @@ export default tseslint.config(
       react: {
         version: 'detect',
       },
+      'import/resolver': {
+        typescript: {
+          project: './tsconfig.json',
+        },
+      },
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
