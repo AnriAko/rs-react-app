@@ -30,7 +30,7 @@ type Props = {
   id?: string;
   dataTestId?: string;
   disabled?: boolean;
-  classes?: string;
+  className?: string;
   darkClasses?: string;
   label?: string;
   labelClasses?: string;
@@ -41,7 +41,7 @@ export const CustomButton = ({
   id,
   dataTestId,
   onClick,
-  classes,
+  className: className,
   darkClasses,
   children,
   disabled,
@@ -57,7 +57,7 @@ export const CustomButton = ({
       theme === Theme.light
         ? themeClasses.light(!!disabled)
         : themeClasses.dark(!!disabled, darkClasses),
-      classes
+      className
     )}
   >
     {children}

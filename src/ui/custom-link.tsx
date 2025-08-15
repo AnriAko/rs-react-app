@@ -1,21 +1,21 @@
 import cl from 'classnames';
-import Link from 'next/link';
 import { ReactNode } from 'react';
 import { Theme, theme } from '~/context/theme/theme-context';
+import { Link } from '~/lib/navigation';
 
 type CustomLinkProps = {
   to: string;
   children: ReactNode;
   theme: theme;
   className?: string;
-  darkClassName?: string;
+  darkClassNames?: string;
 };
 
 export const CustomLink = ({
   to,
   children,
   className,
-  darkClassName,
+  darkClassNames,
   theme = Theme.light,
 }: CustomLinkProps) => (
   <Link
@@ -26,7 +26,7 @@ export const CustomLink = ({
         ['text-gray-900 hover:text-blue-500']: theme !== Theme.dark,
       },
       {
-        [darkClassName ?? '']: theme === Theme.dark && !!darkClassName,
+        [darkClassNames ?? '']: theme === Theme.dark && !!darkClassNames,
       },
       className
     )}

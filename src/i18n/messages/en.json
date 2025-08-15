@@ -1,0 +1,16 @@
+{
+  "NotFoundPage": {
+    "message": "Error 404: Page not found",
+    "goHome": "Go back to home"
+  },
+  "AboutPage": {
+    "title": "About This Project",
+    "authorName": "Author: {name}",
+    "rsSchoolTitle": "Course: RS School React course",
+    "rsSchoolLinkText": "RS School"
+  },
+  "Header": {
+    "search": "Search",
+    "about": "About"
+  }
+}

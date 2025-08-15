@@ -1,0 +1,16 @@
+{
+  "NotFoundPage": {
+    "message": "Ошибка 404: страница не найдена",
+    "goHome": "Назад на главную"
+  },
+  "AboutPage": {
+    "title": "О проекте",
+    "authorName": "Автор: {name}",
+    "rsSchoolTitle": "Курс: RS School React course",
+    "rsSchoolLinkText": "RS School"
+  },
+  "Header": {
+    "search": "Поиск",
+    "about": "О проекте"
+  }
+}
