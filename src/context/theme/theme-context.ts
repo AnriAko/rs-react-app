@@ -1,13 +1,13 @@
 'use client';
 
 import { createContext, useContext } from 'react';
+import {
+  Theme as _Theme,
+  type theme as _theme,
+} from '~/context/theme/types/theme-types';
 
-export const Theme = Object.freeze({
-  light: 'light',
-  dark: 'dark',
-});
-
-export type theme = (typeof Theme)[keyof typeof Theme];
+export type theme = _theme;
+export const Theme = _Theme;
 
 type ThemeContextType = {
   theme: theme;
@@ -15,7 +15,7 @@ type ThemeContextType = {
 };
 
 const defaultTheme: ThemeContextType = {
-  theme: 'light',
+  theme: _Theme.light,
   setTheme: () => {},
 };
 
