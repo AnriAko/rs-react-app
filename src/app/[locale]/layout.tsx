@@ -1,18 +1,17 @@
-// src/app/[locale]/layout.tsx
 import { ErrorBoundary } from '~/components/error-boundary';
 import { ThemeProvider } from '~/context/theme/theme-provider';
 import { Header } from '~/layout/header';
-import { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import type { Locales } from '~/lib/locales';
+import { PokemonsProvider } from '~/context/pokemon-select/pokemon-provider';
 
 type Props = {
-  children: ReactNode;
-  params: { locale: Locales };
+  children: React.ReactNode;
+  params: { locale: Locales | undefined };
 };
 
 export default async function MainLayout({ children, params }: Props) {
-  const { locale } = params;
+  const { locale } = await params;
   const safeLocale: Locales = locale ?? 'en';
   const messages = (await import(`~/i18n/messages/${safeLocale}.json`)).default;
 
@@ -20,8 +19,10 @@ export default async function MainLayout({ children, params }: Props) {
     <ErrorBoundary>
       <NextIntlClientProvider locale={safeLocale} messages={messages}>
         <ThemeProvider>
-          <Header />
-          {children}
+          <PokemonsProvider>
+            <Header />
+            {children}
+          </PokemonsProvider>
         </ThemeProvider>
       </NextIntlClientProvider>
     </ErrorBoundary>

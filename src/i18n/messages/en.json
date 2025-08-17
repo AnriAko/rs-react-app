@@ -12,5 +12,38 @@
   "Header": {
     "search": "Search",
     "about": "About"
+  },
+  "SearchPage": {
+    "title": "Pokemon search page",
+    "errorPrefix": "Error:"
+  },
+  "SearchBar": {
+    "refresh": "Refresh",
+    "search": "Search",
+    "loading": "Loading..."
+  },
+  "PokemonDetailsCard": {
+    "close": "Close",
+    "failedToLoad": "Failed to load Pokemon details"
+  },
+  "SearchInput": {
+    "limit": "Limit",
+    "page": "Page",
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "PokemonInfo": {
+    "baseExperience": "Base Experience",
+    "height": "Height",
+    "weight": "Weight",
+    "types": "Types",
+    "abilities": "Abilities",
+    "notAvailable": "N/A"
+  },
+  "Flyout": {
+    "selectedItem": "Selected item: {count}",
+    "selectedItems": "Selected items: {count}",
+    "unselectAll": "Unselect all",
+    "download": "Download"
   }
 }

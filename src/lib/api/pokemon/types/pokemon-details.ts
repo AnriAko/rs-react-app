@@ -14,12 +14,12 @@ export type PokemonDetails = {
   sprites: Sprites;
 };
 
-export type PokemonType = {
+type PokemonType = {
   slot: number;
   type: NamedApiResource;
 };
 
-export type Ability = {
+type Ability = {
   is_hidden: boolean;
   slot: number;
   ability: NamedApiResource;

@@ -34,13 +34,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeState);
-    setCookieTheme(themeState);
   }, [themeState]);
 
   const setTheme = useCallback((newTheme: theme) => {
-    setThemeState((prevTheme) =>
-      prevTheme === newTheme ? prevTheme : newTheme
-    );
+    setThemeState((prevTheme) => {
+      if (prevTheme === newTheme) return prevTheme;
+      setCookieTheme(newTheme);
+      return newTheme;
+    });
   }, []);
 
   return (

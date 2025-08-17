@@ -1,26 +1,26 @@
 'use client';
 
 import cl from 'classnames';
+import { useState, useCallback } from 'react';
+import { useTheme, Theme } from '~/context/theme/theme-context';
+import { useTranslations } from 'next-intl';
 import { SearchBar } from '~/components/search-bar';
 import { PokemonList } from '~/components/pokemon-list';
 import { PokemonDetailsCard } from '~/components/pokemon-details-card';
 import { LoadingWrapper } from '~/hoc/loading-wrapper';
 import { Flyout } from '~/components/flyout';
-import { Theme } from '~/context/theme/types/theme-types';
 import type { Pokemon } from '~/lib/api/pokemon/types/get-pokemons';
-import { useState, useCallback } from 'react';
-import { usePathname } from '~/lib/navigation';
-import { useTheme } from '~/context/theme/theme-context';
+import { useSearchParams } from 'next/navigation';
 
-export default function SearchPage() {
-  const pathname = usePathname();
-  const params = new URLSearchParams(pathname?.split('?')[1] ?? '');
-  const hasDetails = params.has('details');
+export const SearchPage = () => {
+  const { theme } = useTheme();
+  const t = useTranslations('SearchPage');
+  const searchParams = useSearchParams();
+  const hasDetails = searchParams.get('details') !== null;
 
   const [searchResult, setSearchResult] = useState<Pokemon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { theme } = useTheme();
 
   const handleSetSearchResult = useCallback((pokemons: Pokemon[]) => {
     setSearchResult(pokemons);
@@ -36,6 +36,12 @@ export default function SearchPage() {
     setSearchResult([]);
   }, []);
 
+  const handleCloseDetails = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('details');
+    window.history.replaceState(null, '', `?${params.toString()}`);
+  }, [searchParams]);
+
   return (
     <div
       className={cl('min-h-screen px-6 py-8', {
@@ -49,7 +55,7 @@ export default function SearchPage() {
           'text-gray-900': theme === Theme.light,
         })}
       >
-        Pokemon search page
+        {t('title')}
       </h1>
 
       <SearchBar
@@ -66,7 +72,7 @@ export default function SearchPage() {
             'bg-red-200 text-red-800': theme === Theme.light,
           })}
         >
-          Error: {errorMessage}
+          {t('errorPrefix')} {errorMessage}
         </div>
       )}
 
@@ -78,7 +84,7 @@ export default function SearchPage() {
 
           {hasDetails && (
             <div style={{ flex: 0.3, minWidth: 300 }}>
-              <PokemonDetailsCard />
+              <PokemonDetailsCard onClose={handleCloseDetails} />
             </div>
           )}
         </div>
@@ -87,4 +93,6 @@ export default function SearchPage() {
       <Flyout />
     </div>
   );
-}
+};
+
+export default SearchPage;

@@ -11,6 +11,5 @@ export async function resetPokemonListCache(offset = 0, limit = 20) {
 }
 
 export async function resetAllPokemonsCache() {
-  // можно пройтись по массиву тегов или просто сбрасывать всё
-  revalidateTag('POKEMONS'); // общий тег если захочешь
+  revalidateTag('POKEMONS');
 }

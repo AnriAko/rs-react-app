@@ -1,26 +1,28 @@
-import { getPokemons } from '~/lib/api/pokemon/pokemon-api';
+import cl from 'classnames';
 import { PokemonCard } from '~/components/pokemon-card';
+import type { Pokemon } from '~/lib/api/pokemon/types/get-pokemons';
+import { Theme, theme } from '~/context/theme/theme-context';
 
-export async function PokemonList({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
-  const limit = Number(searchParams.limit ?? 20);
-  const page = Number(searchParams.page ?? 1);
-  const offset = (page - 1) * limit;
+type Props = {
+  result: Pokemon[];
+  theme: theme;
+};
 
-  const data = await getPokemons(offset, limit);
-
+export const PokemonList = ({ result, theme }: Props) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-      {data.results.map((p) => {
+    <div
+      className={cl('grid grid-cols-2 md:grid-cols-3 gap-6', {
+        'bg-white': theme === Theme.light,
+        'bg-gray-900': theme === Theme.dark,
+      })}
+    >
+      {result.map((p) => {
         const idMatch = p.url.match(/\/pokemon\/(\d+)\//);
         const id = idMatch ? idMatch[1] : null;
         if (!id) return null;
 
-        return <PokemonCard key={p.name} name={p.name} id={id} />;
+        return <PokemonCard key={p.name} name={p.name} id={id} theme={theme} />;
       })}
     </div>
   );
-}
+};

@@ -20,7 +20,7 @@ export const Header = () => {
         'bg-white text-gray-900': !isDark,
       })}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center border-b border-gray-600">
+      <div className="max-w mx-auto px-6 py-4 flex justify-between items-center border-b border-gray-600">
         <nav className="flex gap-6 text-lg font-medium">
           <CustomLink to={ROUTES_PATH.ROOT} theme={theme}>
             {t('search')}

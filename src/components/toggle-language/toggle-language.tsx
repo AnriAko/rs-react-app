@@ -6,7 +6,6 @@ import { locales } from '~/lib/locales';
 import { CustomButton } from '~/ui/custom-button';
 import { useTheme } from '~/context/theme/theme-context';
 import { Globe } from 'lucide-react';
-import Image from 'next/image';
 
 export const ToggleLanguage = () => {
   const { theme } = useTheme();
@@ -16,9 +15,11 @@ export const ToggleLanguage = () => {
 
   function toggleLanguage() {
     const newLocale = currentLocale === locales.en ? locales.ru : locales.en;
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    router.push(segments.join('/'));
+    document.cookie = `language=${newLocale}; path=/; max-age=${60 * 60 * 24 * 30}`;
+
+    const url = new URL(window.location.href);
+    url.pathname = url.pathname.replace(/^\/(en|ru)/, `/${newLocale}`);
+    router.push(url.toString());
   }
 
   return (
