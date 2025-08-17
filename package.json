@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "next lint src",
     "format": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "format:fix": "prettier --write \"src/**/*.{ts,tsx}\""
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "prepare": "husky"
   },
   "dependencies": {
     "classnames": "^2.5.1",
+    "husky": "^9.1.7",
     "lucide-react": "^0.539.0",
     "next": "15.4.6",
     "next-intl": "^4.3.4",
