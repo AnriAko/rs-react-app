@@ -1,6 +1,4 @@
-import {
-  GetPokemonsResponse,
-} from '~/lib/api/pokemon/types/get-pokemons';
+import { GetPokemonsResponse } from '~/lib/api/pokemon/types/get-pokemons';
 import { POKEMON_API_ROUTES } from '~/lib/api/pokemon/api-routes';
 import { handleApiError } from '~/lib/api/handle-api-error';
 import { PokemonDetails } from '~/lib/api/pokemon/types/pokemon-details';
