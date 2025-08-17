@@ -1,6 +1,6 @@
-import { ErrorBoundary } from '~/components/error-boundary';
+import { ErrorBoundary } from '../components/error-boundary';
 import { ReactNode } from 'react';
-import '~/app/globals.css';
+import '~/styles/globals.css';
 
 type Props = {
   children: ReactNode;
