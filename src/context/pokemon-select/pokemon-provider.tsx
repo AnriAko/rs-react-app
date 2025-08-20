@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import { PokemonSelectContext, Pokemon } from './pokemon-select-context';
+import {
+  Pokemon,
+  PokemonSelectContext,
+  PokemonSelectContextType,
+} from './pokemon-select-context';
 
 export function PokemonsProvider({ children }: { children: React.ReactNode }) {
   const [selected, setSelected] = useState<Record<string, Pokemon>>({});
@@ -10,9 +14,8 @@ export function PokemonsProvider({ children }: { children: React.ReactNode }) {
     setSelected((prev) => {
       const isSelected = !!prev[pokemon.id];
       if (isSelected) {
-        const copy = { ...prev };
-        delete copy[pokemon.id];
-        return copy;
+        const { [pokemon.id]: _, ...rest } = prev;
+        return rest;
       }
       return { ...prev, [pokemon.id]: pokemon };
     });
@@ -25,8 +28,13 @@ export function PokemonsProvider({ children }: { children: React.ReactNode }) {
     [selected]
   );
 
-  const contextValue = useMemo(
-    () => ({ selected, togglePokemon, clearAll, getSelectedArray }),
+  const contextValue = useMemo<PokemonSelectContextType>(
+    () => ({
+      selected,
+      togglePokemon,
+      clearAll,
+      getSelectedArray,
+    }),
     [selected, togglePokemon, clearAll, getSelectedArray]
   );
 

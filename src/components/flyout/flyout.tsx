@@ -14,26 +14,9 @@ export const Flyout = () => {
 
   if (selectedPokemons.length === 0) return null;
 
-  const handleDownload = async () => {
-    const response = await fetch('/api/download-csv', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(selectedPokemons),
-    });
-
-    if (!response.ok) return;
-
-    const blob = await response.blob();
-    const filename = `${selectedPokemons.length}_items.csv`;
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+  const handleDownload = () => {
+    const encoded = encodeURIComponent(JSON.stringify(selectedPokemons));
+    window.open(`/api/download-csv?data=${encoded}`, '_blank');
   };
 
   return (

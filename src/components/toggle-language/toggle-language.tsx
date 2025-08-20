@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { locales } from '~/lib/locales';
 import { CustomButton } from '~/ui/custom-button';
@@ -10,7 +10,6 @@ import { Globe } from 'lucide-react';
 export const ToggleLanguage = () => {
   const { theme } = useTheme();
   const router = useRouter();
-  const pathname = usePathname();
   const currentLocale = useLocale();
 
   function toggleLanguage() {

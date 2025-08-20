@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const data: Record<string, string>[] = await req.json();
+    const { searchParams } = new URL(req.url);
+    const dataParam = searchParams.get('data');
+
+    if (!dataParam) {
+      return NextResponse.json({ error: 'No data provided' }, { status: 400 });
+    }
+
+    const data: Record<string, string>[] = JSON.parse(dataParam);
 
     if (!Array.isArray(data) || data.length === 0) {
-      return NextResponse.json({ error: 'No data provided' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
 
     const headers = Object.keys(data[0]);
@@ -28,7 +35,7 @@ export async function POST(req: NextRequest) {
         'Content-Disposition': `attachment; filename="${filename}"`,
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate CSV' },
       { status: 500 }

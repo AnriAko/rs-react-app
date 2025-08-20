@@ -9,6 +9,7 @@ import { CustomButton } from '~/ui/custom-button';
 import { Theme, useTheme } from '~/context/theme/theme-context';
 import cl from 'classnames';
 import { useTranslations } from 'next-intl';
+import { PokemonDetails } from '../../lib/api/pokemon/types/pokemon-details';
 
 type Props = {
   onClose: () => void;
@@ -21,7 +22,7 @@ export const PokemonDetailsCard = ({ onClose }: Props) => {
 
   const t = useTranslations('PokemonDetailsCard');
 
-  const [pokemon, setPokemon] = useState<any>(null);
+  const [pokemon, setPokemon] = useState<PokemonDetails>();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
